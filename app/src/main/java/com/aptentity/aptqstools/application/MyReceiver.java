@@ -18,7 +18,7 @@ public class MyReceiver extends BroadcastReceiver{
         if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
             DbHelper.saveScreenOn();
             //get location
-            //((MyApplication)getApplication()).mLocationClient.start();
+            QsApplication.getInstance().mLocationClient.start();
         } else if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
             DbHelper.saveScreenOff();
         }else if (intent.getAction().equals(Intent.ACTION_USER_PRESENT)) {
