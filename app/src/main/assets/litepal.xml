@@ -4,12 +4,14 @@
     <dbname value="qsdb.db" >
     </dbname>
 
-    <version value="4" >
+    <version value="5" >
     </version>
 
     <list>
         <mapping class="com.aptentity.aptqstools.db.ScreenDBEntity"></mapping>
         <mapping class="com.aptentity.aptqstools.db.AppUseDBEntity"></mapping>
+        <mapping class="com.aptentity.aptqstools.db.WeightDBEntity"></mapping>
+        <mapping class="com.aptentity.aptqstools.db.HeartRateDBEntity"></mapping>
     </list>
 
 </litepal>

@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.aptentity.aptqstools" >
+
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.GET_TASKS" />
+
     <application
         android:name=".application.QsApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name">
+        android:label="@string/app_name" >
         <activity
             android:name=".activity.MainActivity"
             android:label="@string/app_name" >
@@ -46,14 +48,23 @@
                 <category android:name="aptentity.intent.category.APT_QS" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".activity.HeartRateActivity"
+            android:label="@string/title_activity_heart_rate" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="aptentity.intent.category.APT_QS" />
+            </intent-filter>
+        </activity>
         <!-- receiver begin -->
-        <receiver android:name=".application.MyReceiver">
-            <intent-filter >
+        <receiver android:name=".application.MyReceiver" >
+            <intent-filter>
                 <action android:name="android.intent.action.USER_PRESENT" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        <!--receiver end-->
+        <!-- receiver end -->
 
         <service
             android:name=".service.PhoneUseService"
@@ -62,6 +73,8 @@
                 <action android:name="com.apt.PhoneUseService" />
             </intent-filter>
         </service>
+
+
     </application>
 
 </manifest>

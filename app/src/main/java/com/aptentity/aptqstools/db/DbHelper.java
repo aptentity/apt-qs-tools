@@ -46,7 +46,7 @@ public class DbHelper {
     public static void saveScreenOn(){
         try{
             on = System.currentTimeMillis();
-            AptQsLog.show("apt-qs screen on:");
+            AptQsLog.show("apt-qs screen on");
             ScreenDBEntity se = new ScreenDBEntity();
             se.setUuid(Common.UUID);
             java.text.DateFormat format = new java.text.SimpleDateFormat(
