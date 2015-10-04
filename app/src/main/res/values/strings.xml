@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">AptQsTools</string>
-
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="screen">亮屏统计</string>
+    <string name="data_manager">数据管理</string>
 </resources>
