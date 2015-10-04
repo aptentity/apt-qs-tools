@@ -1,7 +1,6 @@
 package com.aptentity.aptqstools.service;
 
 import android.app.ActivityManager;
-import android.app.ActivityManager.RecentTaskInfo;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -10,13 +9,9 @@ import android.content.pm.PackageManager;
 import android.os.IBinder;
 
 import com.aptentity.aptqstools.application.MyReceiver;
-import com.aptentity.aptqstools.db.AppUseDBEntity;
-import com.aptentity.aptqstools.db.AppUseDBEntity.AppStatusType;
+import com.aptentity.aptqstools.db.DbHelper;
 import com.aptentity.aptqstools.utils.AptQsLog;
 import com.aptentity.aptqstools.utils.Common;
-
-import java.util.Date;
-import java.util.List;
 
 
 public class PhoneUseService extends Service {
@@ -65,16 +60,12 @@ public class PhoneUseService extends Service {
             });
             th_monitor.start();
         }
+        AptQsLog.show("PhoneUseService->onStartCommand end");
         return super.onStartCommand(intent, flags, startId);
     }
 
     private void getAppUse() {
-        List<RecentTaskInfo> old = am.getRecentTasks(Integer.MAX_VALUE,
-                ActivityManager.RECENT_IGNORE_UNAVAILABLE);
-        if (old == null || old.size() == 0) {
-            return;
-        }
-        String newTask = old.get(0).baseIntent.getComponent().getPackageName();
+        String newTask = Common.getCurrentPkgName(getApplicationContext());
         if (!oldTask.equals(newTask)) {
             CharSequence c = "";
             CharSequence oldc = "";
@@ -85,30 +76,9 @@ public class PhoneUseService extends Service {
                         PackageManager.GET_META_DATA));
             } catch (Exception e) {
             }
-            
-            // db.insertAppOff(oldTask);
-            // db.insertAppOpen(newTask);
-            AptQsLog.show("close:" + oldTask);
 
-            AppUseDBEntity ae = new AppUseDBEntity();
-            ae.setAppName(oldc.toString());
-            java.text.DateFormat format = new java.text.SimpleDateFormat(
-                    Common.FOMAT);
-            ae.setDate(format.format(new Date()));
-            ae.setPackageName(oldTask);
-            ae.setTimestamp(System.currentTimeMillis());
-            ae.setType(AppStatusType.Close);
-            ae.saveThrows();
-
-            AptQsLog.show("open:" + newTask + ":" + c.toString());
-            AppUseDBEntity ae1 = new AppUseDBEntity();
-            ae1.setAppName(c.toString());
-            ae1.setDate(format.format(new Date()));
-            ae1.setPackageName(newTask);
-            ae1.setTimestamp(System.currentTimeMillis());
-            ae1.setType(AppStatusType.Open);
-            ae1.saveThrows();
-            
+            DbHelper.saveAppClose(oldTask,oldc.toString());
+            DbHelper.saveAppOpen(newTask,c.toString());
             oldTask = newTask;
         }
         try {
