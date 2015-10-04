@@ -3,6 +3,7 @@
     package="com.aptentity.aptqstools" >
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
     <application
         android:name=".application.QsApplication"
         android:allowBackup="true"
@@ -29,6 +30,16 @@
         <activity
             android:name=".activity.DataManagerActivity"
             android:label="@string/data_manager" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="aptentity.intent.category.APT_QS" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.WeightActivity"
+            android:label="@string/weight"
+            android:windowSoftInputMode="stateVisible" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
