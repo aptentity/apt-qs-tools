@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="亮屏" />
+            <TextView
+                android:id="@+id/tvSreenOn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ScreenOn" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="解锁" />
+            <TextView
+                android:id="@+id/tvUnlock"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="unlock" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="灭屏" />
+            <TextView
+                android:id="@+id/tvSreenOff"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ScreenOn" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

@@ -3,17 +3,15 @@ package com.aptentity.aptqstools.service;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RecentTaskInfo;
 import android.app.Service;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.IBinder;
 
+import com.aptentity.aptqstools.application.MyReceiver;
 import com.aptentity.aptqstools.db.AppUseDBEntity;
 import com.aptentity.aptqstools.db.AppUseDBEntity.AppStatusType;
-import com.aptentity.aptqstools.db.ScreenDBEntity;
-import com.aptentity.aptqstools.db.ScreenDBEntity.ScreenStatusType;
 import com.aptentity.aptqstools.utils.AptQsLog;
 import com.aptentity.aptqstools.utils.Common;
 
@@ -27,6 +25,7 @@ public class PhoneUseService extends Service {
     private PackageManager pm;
     private boolean brun = false;
     private String oldTask = "";
+    private MyReceiver screenReceiver = new MyReceiver();
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -123,55 +122,10 @@ public class PhoneUseService extends Service {
         final IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_SCREEN_OFF);
         filter.addAction(Intent.ACTION_SCREEN_ON);
-        filter.addAction(Intent.ACTION_USER_PRESENT);
         registerReceiver(screenReceiver, filter);
     }
 
     private void unregisterScreenReceiver() {
         unregisterReceiver(screenReceiver);
     }
-
-    private long on = 0;
-    private final BroadcastReceiver screenReceiver = new BroadcastReceiver() {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
-                on = System.currentTimeMillis();
-                AptQsLog.show("screen on:" + on);
-                ScreenDBEntity se = new ScreenDBEntity();
-                se.setUuid(Common.UUID);
-                java.text.DateFormat format = new java.text.SimpleDateFormat(
-                        Common.FOMAT);
-                se.setDate(format.format(new Date()));
-                se.setTimestamp(System.currentTimeMillis());
-                se.setType(ScreenStatusType.On);
-                se.saveThrows();
-                
-                //get location
-                //((MyApplication)getApplication()).mLocationClient.start();
-                
-            } else if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
-                AptQsLog.show("screen off:" + (System.currentTimeMillis() - on));
-                ScreenDBEntity se = new ScreenDBEntity();
-                se.setUuid(Common.UUID);
-                java.text.DateFormat format = new java.text.SimpleDateFormat(
-                        Common.FOMAT);
-                se.setDate(format.format(new Date()));
-                se.setTimestamp(System.currentTimeMillis());
-                se.setType(ScreenStatusType.Off);
-                se.saveThrows();
-            }else if (intent.getAction().equals(Intent.ACTION_USER_PRESENT)) {
-                AptQsLog.show("unlock:" + (System.currentTimeMillis() - on));
-                ScreenDBEntity se = new ScreenDBEntity();
-                se.setUuid(Common.UUID);
-                java.text.DateFormat format = new java.text.SimpleDateFormat(
-                        Common.FOMAT);
-                se.setDate(format.format(new Date()));
-                se.setTimestamp(System.currentTimeMillis());
-                se.setType(ScreenStatusType.Unlock);
-                se.saveThrows();
-            }
-        }
-    };
 }
