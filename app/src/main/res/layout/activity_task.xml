@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/borg_common_activity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/borg_common_textview"
+                    android:text="标题:" />
+
+                <EditText
+                    android:id="@+id/borg_et_task_title"
+                    style="@style/borg_common_edit_text" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/borg_common_textview"
+                    android:text="描述:" />
+
+                <EditText
+                    android:id="@+id/borg_et_task_description"
+                    style="@style/borg_common_edit_text" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/borg_common_textview"
+                    android:text="目标:" />
+
+                <EditText
+                    android:id="@+id/borg_et_task_target"
+                    style="@style/borg_common_edit_text" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/borg_common_textview"
+                    android:text="步骤:" />
+
+                <EditText
+                    android:id="@+id/borg_et_task_step"
+                    style="@style/borg_common_edit_text" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/borg_common_textview"
+                    android:text="重要程度:" />
+
+                <EditText
+                    android:id="@+id/borg_task_importantIdex"
+                    style="@style/borg_common_edit_text" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/borg_common_textview"
+                    android:text="紧急程度:" />
+
+                <EditText
+                    android:id="@+id/borg_task_urgentIdex"
+                    style="@style/borg_common_edit_text" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/borg_common_textview"
+                    android:text="估计用时:" />
+
+                <EditText
+                    android:id="@+id/borg_task_timeEstimated"
+                    style="@style/borg_common_edit_text" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/borg_view_task_timeUsed"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/borg_common_textview"
+                    android:text="实际用时:" />
+
+                <EditText
+                    android:id="@+id/borg_task_timeUsed"
+                    style="@style/borg_common_edit_text" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/borg_view_task_timeStart"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/borg_common_textview"
+                    android:text="开始时间:" />
+
+                <EditText
+                    android:id="@+id/borg_task_timeStart"
+                    style="@style/borg_common_edit_text" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/borg_view_task_timeEnd"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/borg_common_textview"
+                    android:text="结束时间:" />
+
+                <EditText
+                    android:id="@+id/borg_task_timeEnd"
+                    style="@style/borg_common_edit_text" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/borg_common_textview"
+                    android:text="评分:" />
+
+                <EditText
+                    android:id="@+id/borg_task_score"
+                    style="@style/borg_common_edit_text" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:orientation="horizontal">
+
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/borg_btn_task_save"
+            android:text="保存"/>
+    </LinearLayout>
+</LinearLayout>

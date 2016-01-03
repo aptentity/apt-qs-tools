@@ -1,19 +1,17 @@
-package com.aptentity.aptqstools.db;
+package com.aptentity.aptqstools.model.dao;
 
 import org.litepal.crud.DataSupport;
 
 /*
  * 屏幕打开和关闭数据库对象
  */
-public class AppUseDBEntity extends DataSupport{
+public class ScreenDBEntity extends DataSupport{
     private String uuid="";//用户标示符
-    private int type=0;
-    private String packageName="";
-    private String appName="";
+    private int type=0;//0为亮屏，1为灭屏
     private long timestamp=0;
     private String date="";
     
-    public AppUseDBEntity(){
+    public ScreenDBEntity(){
     }
     
     public String getUuid() {
@@ -48,24 +46,9 @@ public class AppUseDBEntity extends DataSupport{
         this.type = type;
     }
 
-    public String getPackageName() {
-        return packageName;
-    }
-
-    public void setPackageName(String packageName) {
-        this.packageName = packageName;
-    }
-
-    public String getAppName() {
-        return appName;
-    }
-
-    public void setAppName(String appName) {
-        this.appName = appName;
-    }
-
-    public class AppStatusType{
-        public static final int Open=1;
-        public static final int Close=2;
+    public class ScreenStatusType{
+        public static final int On=1;
+        public static final int Off=2;
+        public static final int Unlock=3;
     }
 }

@@ -1,4 +1,4 @@
-package com.aptentity.aptqstools.db;
+package com.aptentity.aptqstools.model.dao;
 /**
  * 体重数据
  */

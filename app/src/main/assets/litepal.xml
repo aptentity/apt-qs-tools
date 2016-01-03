@@ -4,15 +4,16 @@
     <dbname value="qsdb.db" >
     </dbname>
 
-    <version value="8" >
+    <version value="1" >
     </version>
 
     <list>
-        <mapping class="com.aptentity.aptqstools.db.ScreenDBEntity"></mapping>
-        <mapping class="com.aptentity.aptqstools.db.AppUseDBEntity"></mapping>
-        <mapping class="com.aptentity.aptqstools.db.WeightDBEntity"></mapping>
-        <mapping class="com.aptentity.aptqstools.db.HeartRateDBEntity"></mapping>
-        <mapping class="com.aptentity.aptqstools.db.LocationDBEntity"></mapping>
+        <mapping class="com.aptentity.aptqstools.model.dao.ScreenDBEntity"></mapping>
+        <mapping class="com.aptentity.aptqstools.model.dao.AppUseDBEntity"></mapping>
+        <mapping class="com.aptentity.aptqstools.model.dao.WeightDBEntity"></mapping>
+        <mapping class="com.aptentity.aptqstools.model.dao.HeartRateDBEntity"></mapping>
+        <mapping class="com.aptentity.aptqstools.model.dao.LocationDBEntity"></mapping>
+        <mapping class="com.aptentity.aptqstools.model.dao.TaskEntity"></mapping>
     </list>
 
 </litepal>

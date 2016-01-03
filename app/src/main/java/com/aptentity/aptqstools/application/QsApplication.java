@@ -1,7 +1,7 @@
 package com.aptentity.aptqstools.application;
 
-import com.aptentity.aptqstools.db.LocationDBEntity;
-import com.aptentity.aptqstools.utils.AptQsLog;
+import com.aptentity.aptqstools.model.dao.LocationDBEntity;
+import com.aptentity.aptqstools.utils.LogHelper;
 import com.aptentity.aptqstools.utils.Common;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -70,7 +70,7 @@ public class QsApplication extends LitePalApplication{
                 sb.append("\noperationers : ");
                 sb.append(location.getOperators());
             }
-            AptQsLog.v(sb.toString());
+            LogHelper.v(sb.toString());
             try{
                 LocationDBEntity entity = new LocationDBEntity();
                 entity.setAddress(location.getAddrStr());
@@ -87,7 +87,7 @@ public class QsApplication extends LitePalApplication{
                 entity.setTimestamp(System.currentTimeMillis());
                 entity.saveThrows();
             }catch (Exception e){
-                AptQsLog.v(e.toString());
+                LogHelper.v(e.toString());
             }
 
             mLocationClient.stop();

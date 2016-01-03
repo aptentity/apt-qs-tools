@@ -11,9 +11,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.aptentity.aptqstools.R;
-import com.aptentity.aptqstools.db.WeightDBEntity;
-import com.aptentity.aptqstools.db.WeightEntity;
-import com.aptentity.aptqstools.db.WeightSceneType;
+import com.aptentity.aptqstools.model.dao.WeightDBEntity;
+import com.aptentity.aptqstools.model.dao.WeightEntity;
+import com.aptentity.aptqstools.model.dao.WeightSceneType;
 import com.aptentity.aptqstools.utils.Common;
 
 import java.util.Date;

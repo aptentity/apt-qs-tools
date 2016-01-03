@@ -1,4 +1,4 @@
-package com.aptentity.aptqstools.db;
+package com.aptentity.aptqstools.model.dao;
 
 
 import org.litepal.crud.DataSupport;

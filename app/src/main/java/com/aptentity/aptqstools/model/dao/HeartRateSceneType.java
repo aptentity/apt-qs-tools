@@ -1,4 +1,4 @@
-package com.aptentity.aptqstools.db;
+package com.aptentity.aptqstools.model.dao;
 /**
  * 心跳场景类型
  * @author pc

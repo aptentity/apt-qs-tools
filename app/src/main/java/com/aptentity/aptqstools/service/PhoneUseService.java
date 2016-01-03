@@ -9,8 +9,8 @@ import android.content.pm.PackageManager;
 import android.os.IBinder;
 
 import com.aptentity.aptqstools.application.MyReceiver;
-import com.aptentity.aptqstools.db.DbHelper;
-import com.aptentity.aptqstools.utils.AptQsLog;
+import com.aptentity.aptqstools.model.dao.DbHelper;
+import com.aptentity.aptqstools.utils.LogHelper;
 import com.aptentity.aptqstools.utils.Common;
 
 
@@ -31,23 +31,23 @@ public class PhoneUseService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        AptQsLog.show("PhoneUseService->onCreate");
+        LogHelper.show("PhoneUseService->onCreate");
         am = (ActivityManager) this.getSystemService(Context.ACTIVITY_SERVICE);
         pm = this.getPackageManager();
         registerScreenReceiver();
-        AptQsLog.show("PhoneUseService->onCreate end");
+        LogHelper.show("PhoneUseService->onCreate end");
     }
     
     @Override
     public void onDestroy() {
         unregisterScreenReceiver();
-        AptQsLog.show("PhoneUseService->onDestroy");
+        LogHelper.show("PhoneUseService->onDestroy");
         super.onDestroy();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        AptQsLog.show("PhoneUseService->onStartCommand");
+        LogHelper.show("PhoneUseService->onStartCommand");
         if (!brun) {
             brun = true;
             Thread th_monitor = new Thread(new Runnable() {
@@ -60,7 +60,7 @@ public class PhoneUseService extends Service {
             });
             th_monitor.start();
         }
-        AptQsLog.show("PhoneUseService->onStartCommand end");
+        LogHelper.show("PhoneUseService->onStartCommand end");
         return super.onStartCommand(intent, flags, startId);
     }
 

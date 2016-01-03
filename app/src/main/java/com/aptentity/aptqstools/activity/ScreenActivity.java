@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import com.aptentity.aptqstools.R;
-import com.aptentity.aptqstools.db.ScreenDBEntity;
+import com.aptentity.aptqstools.model.dao.ScreenDBEntity;
 import com.aptentity.aptqstools.utils.Common;
 
 import org.litepal.crud.DataSupport;

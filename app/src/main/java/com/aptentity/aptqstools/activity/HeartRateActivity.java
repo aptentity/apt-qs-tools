@@ -8,7 +8,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.aptentity.aptqstools.R;
-import com.aptentity.aptqstools.db.HeartRateDBEntity;
+import com.aptentity.aptqstools.model.dao.HeartRateDBEntity;
 import com.aptentity.aptqstools.utils.Common;
 
 import java.util.Date;

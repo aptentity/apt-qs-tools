@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 /**
  * Created by Gulliver(feilong) on 15/10/4.
  */
-public class AptQsLog {
+public class LogHelper {
     static FileWriter writer = null;
     static FileWriter writer2 = null;
     private static boolean debug = true;
@@ -81,6 +81,22 @@ public class AptQsLog {
         }
     }
 
+    public static void show(String TAG,String log){
+        Log.v(tag+TAG, log);
+        if(!debug){
+            return;
+        }
+        if (mThreadLogger == null) {
+            mThreadLogger = new ThreadLogger();
+        }
+
+        try {
+            mThreadLogger.info(log);
+        } catch (Exception e) {
+            Log.v(tag, e.toString());
+        }
+    }
+
     private static void init() {
         Log.v(tag, "Init Debug:" + debug);
 
@@ -104,7 +120,7 @@ public class AptQsLog {
                     rootLogger.removeHandler(handlers[0]);
                 }
 
-                sLogger = Logger.getLogger(AptQsLog.class.getName());
+                sLogger = Logger.getLogger(LogHelper.class.getName());
                 sLogger.setLevel(Level.INFO);
 
                 FileHandler fileTxt = new FileHandler(sdDir + LOG_FILE_NAME, LOG_FILE_SIZE, LOG_FILE_NUMBER, true);
