@@ -3,6 +3,7 @@ package com.aptentity.aptqstools.model.utils;
 import android.content.Context;
 import android.content.Intent;
 
+import com.aptentity.aptqstools.activity.MainActivity;
 import com.aptentity.aptqstools.model.dao.TaskEntity;
 import com.aptentity.aptqstools.utils.LogHelper;
 import com.aptentity.aptqstools.view.TaskActivity;
@@ -26,6 +27,12 @@ public class ActivitiesUtils {
         Intent intent = new Intent(context, TaskActivity.class);
         intent.putExtra("mode",TaskActivity.MODE_VIEW);
         intent.putExtra("task_id", id);
+        context.startActivity(intent);
+    }
+
+    public static void startFunctionActivity(Context context){
+        LogHelper.show(TAG,"startFunctionActivity");
+        Intent intent = new Intent(context, MainActivity.class);
         context.startActivity(intent);
     }
 }

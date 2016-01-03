@@ -5,4 +5,8 @@
         android:title="创建任务"
         android:orderInCategory="100"
         app:showAsAction="always" />
+    <item android:id="@+id/borg_action_task_list_show"
+        android:title="menu"
+        android:orderInCategory="100"
+        app:showAsAction="always" />
 </menu>

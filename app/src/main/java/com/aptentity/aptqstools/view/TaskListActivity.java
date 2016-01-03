@@ -60,6 +60,9 @@ public class TaskListActivity extends BasicActivity {
             case R.id.borg_action_task_list_add:
                 ActivitiesUtils.startAddTaskActivity(TaskListActivity.this);
                 break;
+            case R.id.borg_action_task_list_show:
+                ActivitiesUtils.startFunctionActivity(TaskListActivity.this);
+                break;
             default:
                 break;
         }
