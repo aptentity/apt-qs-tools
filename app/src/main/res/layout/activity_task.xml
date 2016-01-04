@@ -127,7 +127,21 @@
                     android:id="@+id/borg_task_timeUsed"
                     style="@style/borg_common_edit_text" />
             </LinearLayout>
+            <LinearLayout
+                android:id="@+id/borg_view_task_timeCreate"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
+                <TextView
+                    style="@style/borg_common_textview"
+                    android:text="创建时间:" />
+
+                <EditText
+                    android:id="@+id/borg_et_task_timeCreate"
+                    android:enabled="false"
+                    style="@style/borg_common_edit_text" />
+            </LinearLayout>
             <LinearLayout
                 android:id="@+id/borg_view_task_timeStart"
                 android:layout_width="fill_parent"
@@ -139,12 +153,13 @@
                     android:text="开始时间:" />
 
                 <EditText
-                    android:id="@+id/borg_task_timeStart"
+                    android:id="@+id/borg_et_task_timeStart"
+                    android:enabled="false"
                     style="@style/borg_common_edit_text" />
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/borg_view_task_timeEnd"
+                android:id="@+id/borg_view_task_timeStop"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
@@ -154,7 +169,8 @@
                     android:text="结束时间:" />
 
                 <EditText
-                    android:id="@+id/borg_task_timeEnd"
+                    android:id="@+id/borg_et_task_timeStop"
+                    android:enabled="false"
                     style="@style/borg_common_edit_text" />
             </LinearLayout>
 
@@ -183,7 +199,20 @@
         <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:id="@+id/borg_btn_task_save"
             android:text="保存"/>
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/borg_btn_task_start"
+            android:text="开始"/>
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/borg_btn_task_stop"
+            android:text="停止"/>
     </LinearLayout>
 </LinearLayout>

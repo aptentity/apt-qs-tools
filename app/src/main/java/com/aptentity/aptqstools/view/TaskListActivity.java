@@ -23,6 +23,8 @@ public class TaskListActivity extends BasicActivity {
     private final String TAG = TaskListActivity.class.getSimpleName();
     private TaskListPresenter presenter;
     private List<TaskEntity> mListTask;
+    private ListView mDrawerList;
+    private String[] mTitles;
     @Override
     int getViewID() {
         return R.layout.activity_task_list;
@@ -39,6 +41,11 @@ public class TaskListActivity extends BasicActivity {
         taskList = (ListView)findViewById(R.id.borg_lv_task_list);
         taskList.setOnItemClickListener(l);
         presenter = new TaskListPresenter();
+        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        mTitles = getResources().getStringArray(R.array.time_array);
+        mDrawerList.setAdapter(new ArrayAdapter<String>(this,
+                R.layout.drawer_list_item, mTitles));
+        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
     }
 
     @Override
@@ -90,4 +97,12 @@ public class TaskListActivity extends BasicActivity {
             ActivitiesUtils.startViewTaskActivity(TaskListActivity.this,entity);
         }
     };
+
+    /* The click listner for ListView in the navigation drawer */
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            LogHelper.show(TAG,"onItemClick:"+position);
+        }
+    }
 }
