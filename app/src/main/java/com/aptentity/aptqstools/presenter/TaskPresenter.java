@@ -56,9 +56,24 @@ public class TaskPresenter {
         entity.setStatus(TaskEntity.STATUS_COMPLETE);
         entity.setTimeEnd(time);
         entity.setTimeEndS(TimeUtils.transferLongToDate(time));
+        entity.setTimeUsed((time - entity.getTimeStart()) / 1000);
+        entity.setScore(calculatScore(entity));
         entity.update(entity.getBaseObjId());
     }
 
+
+    public int calculatScore(TaskEntity entity){
+        //重要性系数
+        int importantIndex = 50;
+        int urgentIndex=50;
+
+        int important = entity.getImportantIdex();
+        int urgent = entity.getUrgentIdex();
+        int importantScore = importantIndex*important/3;
+        int urgentScore = urgentIndex*urgent/3;
+        int score = importantScore+urgentScore;
+        return score;
+    }
     /**
      * 暂停任务
      */

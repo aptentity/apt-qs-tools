@@ -16,13 +16,13 @@ public class TaskEntity  extends DataSupport {
     private String description="";//描述
     private String target="";//目标
     private String step="";//步骤
-    private long importantIdex=0;//重要程度,1~3,1-低、2-中、3-高
-    private long urgentIdex=0;//紧急程度,1~3,1-低、2-中、3-高
+    private int importantIdex=2;//重要程度,1~3,1-低、2-中、3-高
+    private int urgentIdex=2;//紧急程度,1~3,1-低、2-中、3-高
     private long timeUsed=0;//使用的时长
     private long timeEstimated=0;//估计的时长
     private long timeStart=0;//开始时间
     private long timeEnd=0;//结束时间
-    private long timeStartEstimated=0;
+    private long timeStartEstimated=0;//计划开始时间
     private long timeEndEstimated=0;
     private String timeStartS="";//开始时间
     private String timeEndS="";//结束时间
@@ -86,19 +86,19 @@ public class TaskEntity  extends DataSupport {
         this.step = step;
     }
 
-    public long getImportantIdex() {
+    public int getImportantIdex() {
         return importantIdex;
     }
 
-    public void setImportantIdex(long importantIdex) {
+    public void setImportantIdex(int importantIdex) {
         this.importantIdex = importantIdex;
     }
 
-    public long getUrgentIdex() {
+    public int getUrgentIdex() {
         return urgentIdex;
     }
 
-    public void setUrgentIdex(long urgentIdex) {
+    public void setUrgentIdex(int urgentIdex) {
         this.urgentIdex = urgentIdex;
     }
 

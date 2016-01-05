@@ -2,9 +2,7 @@ package com.aptentity.aptqstools.view;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.ListView;
 
 import com.aptentity.aptqstools.R;
 import com.aptentity.aptqstools.model.dao.TaskEntity;
@@ -40,7 +38,8 @@ public class TaskActivity extends BasicActivity implements ITaskActivity{
         return 0;
     }
 
-    private EditText mEtTitle,mEtDescription,mEtTarget,mEtStep,mEtTimeCreated,mEtTimeStart,mEtTimeStop;
+    private EditText mEtTitle,mEtDescription,mEtTarget,mEtStep,mEtTimeCreated,mEtTimeStart,mEtTimeStop,mEtTimeUsed,
+            mEtScore;
     @Override
     void initUI() {
         mEtTitle = (EditText)findViewById(R.id.borg_et_task_title);
@@ -50,6 +49,8 @@ public class TaskActivity extends BasicActivity implements ITaskActivity{
         mEtTimeCreated = (EditText)findViewById(R.id.borg_et_task_timeCreate);
         mEtTimeStart = (EditText)findViewById(R.id.borg_et_task_timeStart);
         mEtTimeStop = (EditText)findViewById(R.id.borg_et_task_timeStop);
+        mEtTimeUsed = (EditText)findViewById(R.id.borg_et_task_timeUsed);
+        mEtScore = (EditText)findViewById(R.id.borg_et_task_score);
         findViewById(R.id.borg_btn_task_save).setOnClickListener(this);
         findViewById(R.id.borg_btn_task_start).setOnClickListener(this);
         findViewById(R.id.borg_btn_task_stop).setOnClickListener(this);
@@ -81,8 +82,7 @@ public class TaskActivity extends BasicActivity implements ITaskActivity{
                 break;
             case R.id.borg_btn_task_stop:
                 presenter.stopTask();
-                long timeStop = System.currentTimeMillis();
-                mEtTimeStop.setText(TimeUtils.transferLongToDate(timeStop));
+                fillUI(mEntity);
                 break;
             default:
                 break;
@@ -119,5 +119,8 @@ public class TaskActivity extends BasicActivity implements ITaskActivity{
         mEtStep.setText(entity.getStep());
         mEtTimeCreated.setText(TimeUtils.transferLongToDate(entity.getTimestamp()));
         mEtTimeStart.setText(TimeUtils.transferLongToDate(entity.getTimeStart()));
+        mEtScore.setText(String.valueOf(entity.getScore()));
+        mEtTimeUsed.setText(String.valueOf(entity.getTimeUsed()));
+        mEtTimeStop.setText(TimeUtils.transferLongToDate(entity.getTimeEnd()));
     }
 }

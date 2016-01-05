@@ -54,7 +54,6 @@ public class ScreenActivity extends Activity {
             int count = DataSupport.where("date>? and date<? and type=?",getDay(-i),getDay(-i+1),"2").count(ScreenDBEntity.class);
             String str = getDay(-i)+":"+count;
             tv.setText(tv.getText()+str+"\n");
-            
         }
     }
     
