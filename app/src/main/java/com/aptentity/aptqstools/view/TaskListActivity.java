@@ -8,12 +8,15 @@ import android.widget.ListView;
 
 import com.aptentity.aptqstools.R;
 import com.aptentity.aptqstools.model.dao.TaskEntity;
+import com.aptentity.aptqstools.model.dao.TestEntity;
 import com.aptentity.aptqstools.model.utils.ActivitiesUtils;
 import com.aptentity.aptqstools.presenter.TaskListPresenter;
 import com.aptentity.aptqstools.utils.LogHelper;
 
 import java.util.LinkedList;
 import java.util.List;
+
+import cn.bmob.v3.listener.SaveListener;
 
 /**
  * 任务列表
@@ -46,6 +49,21 @@ public class TaskListActivity extends BasicActivity {
         mDrawerList.setAdapter(new ArrayAdapter<String>(this,
                 R.layout.drawer_list_item, mTitles));
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+
+
+        final TestEntity entity =new TestEntity();
+        entity.setText("abc");
+        entity.save(this, new SaveListener() {
+            @Override
+            public void onSuccess() {
+                LogHelper.show(TAG,"onSuccess:"+entity.getObjectId());
+            }
+
+            @Override
+            public void onFailure(int i, String s) {
+                LogHelper.show(TAG,"onFailure:"+s);
+            }
+        });
     }
 
     @Override

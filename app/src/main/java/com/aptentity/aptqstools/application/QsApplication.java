@@ -1,15 +1,18 @@
 package com.aptentity.aptqstools.application;
 
 import com.aptentity.aptqstools.model.dao.LocationDBEntity;
-import com.aptentity.aptqstools.utils.LogHelper;
 import com.aptentity.aptqstools.utils.Common;
+import com.aptentity.aptqstools.utils.LogHelper;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.GeofenceClient;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.location.LocationClientOption.LocationMode;
+
 import org.litepal.LitePalApplication;
+
+import cn.bmob.v3.Bmob;
 
 public class QsApplication extends LitePalApplication{
     public LocationClient mLocationClient;
@@ -25,6 +28,7 @@ public class QsApplication extends LitePalApplication{
     public void onCreate() {
         super.onCreate();
         instance = this;
+        Bmob.initialize(this, "22223a5f4df26be225ba36877a9445ae");
         //启动service
         Common.startPhoneUseService(getApplicationContext());
 
