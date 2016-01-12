@@ -1,12 +1,12 @@
 package com.aptentity.aptqstools.model.dao;
 
-import org.litepal.crud.DataSupport;
+import cn.bmob.v3.BmobObject;
 
 /**
  * Created by gulliver on 16/1/3.
  * 任务
  */
-public class TaskEntity  extends DataSupport {
+public class TaskEntity  extends BmobObject {
     public static final int STATUS_NORMAL=0;//正常状态
     public static final int STATUS_DELETED=1;//被删除
     public static final int STATUS_COMPLETE=2;//完成
@@ -164,11 +164,6 @@ public class TaskEntity  extends DataSupport {
 
     public void setTimeEndEstimated(long timeEndEstimated) {
         this.timeEndEstimated = timeEndEstimated;
-    }
-
-    @Override
-    public long getBaseObjId() {
-        return super.getBaseObjId();
     }
 
     @Override

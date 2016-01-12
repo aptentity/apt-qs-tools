@@ -1,5 +1,6 @@
 package com.aptentity.aptqstools.view;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -10,6 +11,8 @@ import com.aptentity.aptqstools.model.utils.TimeUtils;
 import com.aptentity.aptqstools.presenter.TaskPresenter;
 import com.aptentity.aptqstools.utils.LogHelper;
 import com.aptentity.aptqstools.view.api.ITaskActivity;
+
+import cn.bmob.v3.listener.GetListener;
 
 public class TaskActivity extends BasicActivity implements ITaskActivity{
     public final String TAG = TaskActivity.class.getSimpleName();
@@ -61,9 +64,20 @@ public class TaskActivity extends BasicActivity implements ITaskActivity{
             findViewById(R.id.borg_btn_task_start).setVisibility(View.GONE);
             findViewById(R.id.borg_btn_task_stop).setVisibility(View.GONE);
         }else if (MODE_VIEW==mode){
-            long taskId = getIntent().getExtras().getLong("task_id");
-            mEntity = presenter.getTask(taskId);
-            fillUI(mEntity);
+            String taskId = getIntent().getExtras().getString("task_id");
+            presenter.getTask(taskId, new GetListener<TaskEntity>() {
+                @Override
+                public void onSuccess(TaskEntity entity) {
+                    mEntity = entity;
+                    fillUI(mEntity);
+                }
+
+                @Override
+                public void onFailure(int i, String s) {
+
+                }
+            });
+
             findViewById(R.id.borg_btn_task_save).setVisibility(View.GONE);
         }
     }
@@ -122,5 +136,10 @@ public class TaskActivity extends BasicActivity implements ITaskActivity{
         mEtScore.setText(String.valueOf(entity.getScore()));
         mEtTimeUsed.setText(String.valueOf(entity.getTimeUsed()));
         mEtTimeStop.setText(TimeUtils.transferLongToDate(entity.getTimeEnd()));
+    }
+
+    @Override
+    public Context getContext() {
+        return getApplicationContext();
     }
 }

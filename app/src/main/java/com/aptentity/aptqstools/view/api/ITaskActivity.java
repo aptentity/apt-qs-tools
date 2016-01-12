@@ -1,5 +1,7 @@
 package com.aptentity.aptqstools.view.api;
 
+import android.content.Context;
+
 import com.aptentity.aptqstools.model.dao.TaskEntity;
 
 /**
@@ -17,4 +19,6 @@ public interface ITaskActivity {
      * @return
      */
     public TaskEntity getTaskEntity();
+
+    public Context getContext();
 }

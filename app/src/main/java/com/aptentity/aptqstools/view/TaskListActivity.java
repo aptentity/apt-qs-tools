@@ -12,10 +12,12 @@ import com.aptentity.aptqstools.model.dao.TestEntity;
 import com.aptentity.aptqstools.model.utils.ActivitiesUtils;
 import com.aptentity.aptqstools.presenter.TaskListPresenter;
 import com.aptentity.aptqstools.utils.LogHelper;
+import com.aptentity.aptqstools.view.adapter.TaskItemAdapter;
 
 import java.util.LinkedList;
 import java.util.List;
 
+import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
 
 /**
@@ -69,7 +71,7 @@ public class TaskListActivity extends BasicActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        taskList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, getData()));
+        getData();
     }
 
     @Override
@@ -98,13 +100,32 @@ public class TaskListActivity extends BasicActivity {
      * 取得所有任务
      * @return
      */
-    private List<String> getData(){
-        mListTask = presenter.getAllTask();
-        List<String> list = new LinkedList<String>();
-        for (TaskEntity task:mListTask) {
-            list.add(task.getTitle());
-        }
-        return list;
+    private void getData(){
+        presenter.getAllTask(new FindListener<TaskEntity>(){
+            @Override
+            public void onSuccess(final List<TaskEntity> list) {
+                mListTask = list;
+                final List<String> list1 = new LinkedList<String>();
+                for (TaskEntity task:mListTask) {
+                    list1.add(task.getTitle());
+                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        TaskItemAdapter adapter = new TaskItemAdapter(TaskListActivity.this);
+                        adapter.setData(list);
+                        taskList.setAdapter(adapter);
+//                        taskList.setAdapter(new ArrayAdapter<String>(TaskListActivity.this,
+//                                android.R.layout.simple_expandable_list_item_1, list1));
+                    }
+                });
+            }
+
+            @Override
+            public void onError(int i, String s) {
+
+            }
+        });
     }
 
     private AdapterView.OnItemClickListener l = new AdapterView.OnItemClickListener() {

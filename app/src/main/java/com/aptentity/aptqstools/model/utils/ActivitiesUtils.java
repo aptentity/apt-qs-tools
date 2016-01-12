@@ -22,7 +22,7 @@ public class ActivitiesUtils {
 
     public static void startViewTaskActivity(Context context,TaskEntity entity){
         LogHelper.show(TAG,"startViewTaskActivity");
-        long id = entity.getBaseObjId();
+        String id = entity.getObjectId();
         LogHelper.show(TAG, "getBaseObjId:"+id);
         Intent intent = new Intent(context, TaskActivity.class);
         intent.putExtra("mode",TaskActivity.MODE_VIEW);
