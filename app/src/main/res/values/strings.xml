@@ -98,7 +98,8 @@
         "when a user tries to pick up one of cards.\n\n"
     </string>
     <string-array name="time_array">
-        <item>Today</item>
-        <item>Week</item>
+        <item>All</item>
+        <item>Complete</item>
+        <item>Normal</item>
     </string-array>
 </resources>

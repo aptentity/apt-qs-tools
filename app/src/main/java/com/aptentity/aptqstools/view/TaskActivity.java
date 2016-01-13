@@ -2,6 +2,7 @@ package com.aptentity.aptqstools.view;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
@@ -38,7 +39,7 @@ public class TaskActivity extends BasicActivity implements ITaskActivity{
 
     @Override
     int getMenuId() {
-        return 0;
+        return R.menu.menu_task;
     }
 
     private EditText mEtTitle,mEtDescription,mEtTarget,mEtStep,mEtTimeCreated,mEtTimeStart,mEtTimeStop,mEtTimeUsed,
@@ -126,7 +127,7 @@ public class TaskActivity extends BasicActivity implements ITaskActivity{
      * @param entity
      */
     private void fillUI(TaskEntity entity){
-        LogHelper.show(TAG,"fill ui:"+entity.toString());
+        LogHelper.show(TAG,"fill ui:"+entity.toString()+";"+entity.getObjectId());
         mEtTitle.setText(entity.getTitle());
         mEtDescription.setText(entity.getDescription());
         mEtTarget.setText(entity.getTarget());
@@ -141,5 +142,21 @@ public class TaskActivity extends BasicActivity implements ITaskActivity{
     @Override
     public Context getContext() {
         return getApplicationContext();
+    }
+
+    /**
+     * 菜单功能
+     * @param item
+     * @return
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.borg_action_task_delete:
+                presenter.deleteTask();
+                finish();
+                break;
+        }
+        return true;
     }
 }

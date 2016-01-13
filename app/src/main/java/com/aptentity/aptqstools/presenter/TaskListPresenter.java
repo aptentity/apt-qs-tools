@@ -31,4 +31,48 @@ public class TaskListPresenter {
             }
         });
     }
+
+    /**
+     * 获取已经完成的任务
+     * @param findListener
+     */
+    public void getCompletedTasks(final FindListener<TaskEntity> findListener){
+        BmobQuery<TaskEntity> query = new BmobQuery<TaskEntity>();
+        query.addWhereEqualTo("status",TaskEntity.STATUS_COMPLETE);
+        query.findObjects(QsApplication.getInstance(), new FindListener<TaskEntity>() {
+            @Override
+            public void onSuccess(List<TaskEntity> list) {
+                LogHelper.show(TAG,"getAllTask onSuccess");
+                findListener.onSuccess(list);
+            }
+
+            @Override
+            public void onError(int i, String s) {
+                LogHelper.show(TAG,"getAllTask onError:"+i+";"+s);
+                findListener.onError(i,s);
+            }
+        });
+    }
+
+    /**
+     * 获取已经完成的任务
+     * @param findListener
+     */
+    public void getNormalTasks(final FindListener<TaskEntity> findListener){
+        BmobQuery<TaskEntity> query = new BmobQuery<TaskEntity>();
+        query.addWhereEqualTo("status",TaskEntity.STATUS_NORMAL);
+        query.findObjects(QsApplication.getInstance(), new FindListener<TaskEntity>() {
+            @Override
+            public void onSuccess(List<TaskEntity> list) {
+                LogHelper.show(TAG,"getAllTask onSuccess");
+                findListener.onSuccess(list);
+            }
+
+            @Override
+            public void onError(int i, String s) {
+                LogHelper.show(TAG,"getAllTask onError:"+i+";"+s);
+                findListener.onError(i,s);
+            }
+        });
+    }
 }

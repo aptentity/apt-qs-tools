@@ -1,5 +1,6 @@
 package com.aptentity.aptqstools.view;
 
+import android.support.v4.widget.DrawerLayout;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -30,6 +31,9 @@ public class TaskListActivity extends BasicActivity {
     private List<TaskEntity> mListTask;
     private ListView mDrawerList;
     private String[] mTitles;
+    private DrawerLayout mDrawerLayout;
+    private int mDataType=0;
+
     @Override
     int getViewID() {
         return R.layout.activity_task_list;
@@ -51,21 +55,48 @@ public class TaskListActivity extends BasicActivity {
         mDrawerList.setAdapter(new ArrayAdapter<String>(this,
                 R.layout.drawer_list_item, mTitles));
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+        mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+    }
+
+    /**
+     * 任务列表点击
+     * 打开任务详情
+     */
+    private AdapterView.OnItemClickListener l = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            LogHelper.show(TAG,"listview onItemClick");
+            TaskEntity entity = mListTask.get(i);
+            ActivitiesUtils.startViewTaskActivity(TaskListActivity.this,entity);
+        }
+    };
 
 
-        final TestEntity entity =new TestEntity();
-        entity.setText("abc");
-        entity.save(this, new SaveListener() {
-            @Override
-            public void onSuccess() {
-                LogHelper.show(TAG,"onSuccess:"+entity.getObjectId());
-            }
+    /**
+     * 选择显示的视图
+     */
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            mDataType = position;
+            getData();
+            LogHelper.show(TAG,"onItemClick:"+position);
+            mDrawerLayout.closeDrawers();
+        }
+    }
 
-            @Override
-            public void onFailure(int i, String s) {
-                LogHelper.show(TAG,"onFailure:"+s);
-            }
-        });
+    private void getData(){
+        switch (mDataType){
+            case 0:
+                getAllTasks();
+                break;
+            case 1:
+                getCompletedTasks();
+                break;
+            case 2:
+                getNormalTasks();
+                break;
+        }
     }
 
     @Override
@@ -81,6 +112,11 @@ public class TaskListActivity extends BasicActivity {
         }
     }
 
+    /**
+     * 菜单功能
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -100,25 +136,11 @@ public class TaskListActivity extends BasicActivity {
      * 取得所有任务
      * @return
      */
-    private void getData(){
+    private void getAllTasks(){
         presenter.getAllTask(new FindListener<TaskEntity>(){
             @Override
             public void onSuccess(final List<TaskEntity> list) {
-                mListTask = list;
-                final List<String> list1 = new LinkedList<String>();
-                for (TaskEntity task:mListTask) {
-                    list1.add(task.getTitle());
-                }
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        TaskItemAdapter adapter = new TaskItemAdapter(TaskListActivity.this);
-                        adapter.setData(list);
-                        taskList.setAdapter(adapter);
-//                        taskList.setAdapter(new ArrayAdapter<String>(TaskListActivity.this,
-//                                android.R.layout.simple_expandable_list_item_1, list1));
-                    }
-                });
+                updateTaskList(list);
             }
 
             @Override
@@ -128,20 +150,53 @@ public class TaskListActivity extends BasicActivity {
         });
     }
 
-    private AdapterView.OnItemClickListener l = new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-            LogHelper.show(TAG,"listview onItemClick");
-            TaskEntity entity = mListTask.get(i);
-            ActivitiesUtils.startViewTaskActivity(TaskListActivity.this,entity);
-        }
-    };
+    /**
+     * 获得完成的任务
+     */
+    private void getCompletedTasks() {
+        presenter.getCompletedTasks(new FindListener<TaskEntity>() {
+            @Override
+            public void onSuccess(List<TaskEntity> list) {
+                updateTaskList(list);
+            }
 
-    /* The click listner for ListView in the navigation drawer */
-    private class DrawerItemClickListener implements ListView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            LogHelper.show(TAG,"onItemClick:"+position);
-        }
+            @Override
+            public void onError(int i, String s) {
+
+            }
+        });
+    }
+
+    /**
+     * 获得正常状态任务
+     */
+    private void getNormalTasks() {
+        presenter.getNormalTasks(new FindListener<TaskEntity>() {
+            @Override
+            public void onSuccess(List<TaskEntity> list) {
+                updateTaskList(list);
+            }
+
+            @Override
+            public void onError(int i, String s) {
+
+            }
+        });
+    }
+
+    /**
+     * 更新任务列表
+     * @param list
+     */
+    private void updateTaskList(final List<TaskEntity> list){
+        mListTask = list;
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                TaskItemAdapter adapter = new TaskItemAdapter(TaskListActivity.this);
+                adapter.setData(list);
+                taskList.setAdapter(adapter);
+            }
+        });
     }
 }
