@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -51,7 +50,7 @@ public class TaskItemAdapter extends BaseAdapter{
             holder = new ViewHolder();
             convertView = mInflater.inflate(R.layout.task_item, null);
             holder.title = (TextView)convertView.findViewById(R.id.tv_task_name);
-            holder.cbFinish = (CheckBox)convertView.findViewById(R.id.cb_finish);
+            holder.cbFinish = convertView.findViewById(R.id.iv_finish);
 
 
             convertView.setTag(holder);
@@ -64,7 +63,7 @@ public class TaskItemAdapter extends BaseAdapter{
         holder.title.setText(mList.get(i).getTitle());
         //任务状态
         if (mList.get(i).getStatus()==TaskEntity.STATUS_COMPLETE){
-            holder.cbFinish.setChecked(true);
+            holder.cbFinish.setVisibility(View.VISIBLE);
         }else {
             holder.cbFinish.setVisibility(View.GONE);
         }
@@ -74,7 +73,7 @@ public class TaskItemAdapter extends BaseAdapter{
 
     static class ViewHolder
     {
-        public CheckBox cbFinish;
+        public View cbFinish;
         public ImageView img;
         public TextView title;
         public TextView info;

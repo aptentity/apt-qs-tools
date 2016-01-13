@@ -17,6 +17,7 @@ public class TaskListPresenter {
     private final String TAG = TaskListActivity.class.getSimpleName();
     public void getAllTask(final FindListener<TaskEntity> findListener){
         BmobQuery<TaskEntity> query = new BmobQuery<TaskEntity>();
+        //query.setCachePolicy(BmobQuery.CachePolicy.CACHE_ELSE_NETWORK);
         query.findObjects(QsApplication.getInstance(), new FindListener<TaskEntity>() {
             @Override
             public void onSuccess(List<TaskEntity> list) {
@@ -38,6 +39,7 @@ public class TaskListPresenter {
      */
     public void getCompletedTasks(final FindListener<TaskEntity> findListener){
         BmobQuery<TaskEntity> query = new BmobQuery<TaskEntity>();
+        //query.setCachePolicy(BmobQuery.CachePolicy.CACHE_ELSE_NETWORK);
         query.addWhereEqualTo("status",TaskEntity.STATUS_COMPLETE);
         query.findObjects(QsApplication.getInstance(), new FindListener<TaskEntity>() {
             @Override
@@ -60,7 +62,8 @@ public class TaskListPresenter {
      */
     public void getNormalTasks(final FindListener<TaskEntity> findListener){
         BmobQuery<TaskEntity> query = new BmobQuery<TaskEntity>();
-        query.addWhereEqualTo("status",TaskEntity.STATUS_NORMAL);
+        //query.setCachePolicy(BmobQuery.CachePolicy.CACHE_ELSE_NETWORK);
+        query.addWhereEqualTo("status", TaskEntity.STATUS_NORMAL);
         query.findObjects(QsApplication.getInstance(), new FindListener<TaskEntity>() {
             @Override
             public void onSuccess(List<TaskEntity> list) {

@@ -21,6 +21,7 @@ public class TaskPresenter {
 
     public void getTask(String taskId,GetListener<TaskEntity> callback){
         BmobQuery<TaskEntity> query = new BmobQuery<TaskEntity>();
+        //query.setCachePolicy(BmobQuery.CachePolicy.CACHE_ELSE_NETWORK);
         query.getObject(activity.getContext(), taskId, callback);
     }
 
@@ -64,7 +65,6 @@ public class TaskPresenter {
         entity.setTimeStart(time);
         entity.setTimeStartS(TimeUtils.transferLongToDate(time));
         entity.update(activity.getContext());
-        //entity.update(entity.getBaseObjId());
     }
 
     /**
@@ -79,7 +79,6 @@ public class TaskPresenter {
         entity.setTimeUsed((time - entity.getTimeStart()) / 1000);
         entity.setScore(calculatScore(entity));
         entity.update(activity.getContext());
-        //entity.update(entity.getBaseObjId());
     }
 
 
