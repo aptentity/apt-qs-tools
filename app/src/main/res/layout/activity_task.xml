@@ -212,7 +212,19 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:id="@+id/borg_btn_task_stop"
-            android:text="停止"/>
+            android:id="@+id/borg_btn_task_pause"
+            android:text="暂停"/>
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/borg_btn_task_resume"
+            android:text="继续"/>
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/borg_btn_task_complete"
+            android:text="完成"/>
     </LinearLayout>
 </LinearLayout>

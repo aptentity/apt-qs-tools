@@ -45,12 +45,12 @@ public class TaskPresenter {
         entity.delete(activity.getContext(), new DeleteListener() {
             @Override
             public void onSuccess() {
-                LogHelper.show(TAG,"deleteTask onSuccess");
+                LogHelper.show(TAG, "deleteTask onSuccess");
             }
 
             @Override
             public void onFailure(int i, String s) {
-                LogHelper.show(TAG,"deleteTask onFailure:"+i+";"+s);
+                LogHelper.show(TAG, "deleteTask onFailure:" + i + ";" + s);
             }
         });
     }
@@ -63,6 +63,7 @@ public class TaskPresenter {
         TaskEntity entity = activity.getTaskEntity();
         entity.setStatus(TaskEntity.STATUS_RUNNING);
         entity.setTimeStart(time);
+        entity.setTimeThisTime(time);
         entity.setTimeStartS(TimeUtils.transferLongToDate(time));
         entity.update(activity.getContext());
     }
@@ -70,17 +71,27 @@ public class TaskPresenter {
     /**
      * 停止任务
      */
-    public void stopTask(){
+    public void completTask(){
         long time = System.currentTimeMillis();
         TaskEntity entity = activity.getTaskEntity();
-        entity.setStatus(TaskEntity.STATUS_COMPLETE);
         entity.setTimeEnd(time);
         entity.setTimeEndS(TimeUtils.transferLongToDate(time));
-        entity.setTimeUsed((time - entity.getTimeStart()) / 1000);
+        //正在计时
+        if (entity.getStatus()==TaskEntity.STATUS_RUNNING){
+            entity.setTimeUsed(entity.getTimeUsed()+(time-entity.getTimeThisTime()));
+        }
+        entity.setStatus(TaskEntity.STATUS_COMPLETE);
         entity.setScore(calculatScore(entity));
         entity.update(activity.getContext());
     }
 
+    public void resumeTask(){
+        TaskEntity entity = activity.getTaskEntity();
+        entity.setStatus(TaskEntity.STATUS_RUNNING);
+        long time = System.currentTimeMillis();
+        entity.setTimeThisTime(time);
+        entity.update(activity.getContext());
+    }
 
     public int calculatScore(TaskEntity entity){
         //重要性系数
@@ -97,5 +108,11 @@ public class TaskPresenter {
     /**
      * 暂停任务
      */
-    public void pauseTask(){}
+    public void pauseTask(){
+        TaskEntity entity = activity.getTaskEntity();
+        long time = System.currentTimeMillis();
+        entity.setStatus(TaskEntity.STATUS_PAUSE);
+        entity.setTimeUsed(entity.getTimeUsed() + (time - entity.getTimeThisTime()));
+        entity.update(activity.getContext());
+    }
 }

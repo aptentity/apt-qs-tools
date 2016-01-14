@@ -24,6 +24,16 @@ public class TaskEntity  extends BmobObject {
     private long timeEnd=0;//结束时间
     private long timeStartEstimated=0;//计划开始时间
     private long timeEndEstimated=0;
+
+    public long getTimeThisTime() {
+        return timeThisTime;
+    }
+
+    public void setTimeThisTime(long timeThisTime) {
+        this.timeThisTime = timeThisTime;
+    }
+
+    private long timeThisTime=0;//本次时间
     private String timeStartS="";//开始时间
     private String timeEndS="";//结束时间
     private int score=0;//分数
