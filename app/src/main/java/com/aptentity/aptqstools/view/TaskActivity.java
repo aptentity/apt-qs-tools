@@ -53,7 +53,7 @@ public class TaskActivity extends BasicActivity implements ITaskActivity{
     }
 
     private EditText mEtTitle,mEtDescription,mEtTarget,mEtStep,mEtTimeCreated,mEtTimeStart,mEtTimeStop,mEtTimeUsed,
-            mEtScore,mEtImportant,mEtUrgent;
+            mEtScore,mEtImportant,mEtUrgent,mEtTimeEstimated;
     @Override
     void initUI() {
         mEtTitle = (EditText)findViewById(R.id.borg_et_task_title);
@@ -69,6 +69,7 @@ public class TaskActivity extends BasicActivity implements ITaskActivity{
         mEtUrgent = (EditText)findViewById(R.id.borg_et_task_urgentIdex);
         mEtImportant.setOnClickListener(this);
         mEtUrgent.setOnClickListener(this);
+        mEtTimeEstimated = (EditText)findViewById(R.id.borg_et_task_timeEstimated);
         findViewById(R.id.borg_btn_task_save).setOnClickListener(this);
         findViewById(R.id.borg_btn_task_start).setOnClickListener(this);
         findViewById(R.id.borg_btn_task_complete).setOnClickListener(this);
@@ -170,6 +171,7 @@ public class TaskActivity extends BasicActivity implements ITaskActivity{
         mEntity.setDescription(mEtDescription.getText().toString());
         mEntity.setTarget(mEtTarget.getText().toString());
         mEntity.setStep(mEtStep.getText().toString());
+        mEntity.setTimeEstimated(Long.parseLong(mEtTimeEstimated.getText().toString()));
         mEntity.setImportantIdex(UrgentUtils.getUrgentIdex(mEtImportant.getText().toString()));
         mEntity.setUrgentIdex(UrgentUtils.getUrgentIdex(mEtUrgent.getText().toString()));
         return mEntity;
@@ -211,6 +213,7 @@ public class TaskActivity extends BasicActivity implements ITaskActivity{
         }
         mEtUrgent.setText(UrgentUtils.getUrgentName(entity.getUrgentIdex()));
         mEtImportant.setText(UrgentUtils.getUrgentName(entity.getImportantIdex()));
+        mEtTimeEstimated.setText(String.valueOf(entity.getTimeEstimated()));
     }
 
     private void normalUI(){

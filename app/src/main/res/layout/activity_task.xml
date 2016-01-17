@@ -123,7 +123,8 @@
                     android:text="估计用时:" />
 
                 <EditText
-                    android:id="@+id/borg_task_timeEstimated"
+                    android:id="@+id/borg_et_task_timeEstimated"
+                    android:inputType="number"
                     style="@style/borg_common_edit_text" />
             </LinearLayout>
 
