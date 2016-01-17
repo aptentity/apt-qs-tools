@@ -102,4 +102,8 @@
         <item>Complete</item>
         <item>Normal</item>
     </string-array>
+    <string name="equipment_settings_logout_dialog_cancel">取消</string>
+    <string name="high">高</string>
+    <string name="middle">中</string>
+    <string name="low">低</string>
 </resources>

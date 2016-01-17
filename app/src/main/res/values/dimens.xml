@@ -5,4 +5,7 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="app_bar_height">180dp</dimen>
     <dimen name="text_margin">16dp</dimen>
+    <dimen name="settings_custom_btn_view_height">56dp</dimen>
+    <dimen name="settings_custom_btn_text_size">16sp</dimen>
+    <dimen name="logout_dialog_cut_line_big">8dp</dimen>
 </resources>

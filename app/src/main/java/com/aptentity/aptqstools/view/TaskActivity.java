@@ -15,9 +15,11 @@ import com.aptentity.aptqstools.R;
 import com.aptentity.aptqstools.activity.MainActivity;
 import com.aptentity.aptqstools.model.dao.TaskEntity;
 import com.aptentity.aptqstools.model.utils.TimeUtils;
+import com.aptentity.aptqstools.model.utils.UrgentUtils;
 import com.aptentity.aptqstools.presenter.TaskPresenter;
 import com.aptentity.aptqstools.utils.LogHelper;
 import com.aptentity.aptqstools.view.api.ITaskActivity;
+import com.aptentity.aptqstools.view.widget.UrgentSelectDlg;
 
 import cn.bmob.v3.listener.GetListener;
 
@@ -27,7 +29,7 @@ public class TaskActivity extends BasicActivity implements ITaskActivity{
     public final static int MODE_VIEW=1;
     private int mode=0;//模式，0添加任务模式，1为查看任务模式
     private TaskPresenter presenter;
-    private TaskEntity mEntity;
+    private TaskEntity mEntity=new TaskEntity();;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,11 +47,13 @@ public class TaskActivity extends BasicActivity implements ITaskActivity{
 
     @Override
     int getMenuId() {
+        if (mode==MODE_ADD)
+            return 0;
         return R.menu.menu_task;
     }
 
     private EditText mEtTitle,mEtDescription,mEtTarget,mEtStep,mEtTimeCreated,mEtTimeStart,mEtTimeStop,mEtTimeUsed,
-            mEtScore;
+            mEtScore,mEtImportant,mEtUrgent;
     @Override
     void initUI() {
         mEtTitle = (EditText)findViewById(R.id.borg_et_task_title);
@@ -61,12 +65,20 @@ public class TaskActivity extends BasicActivity implements ITaskActivity{
         mEtTimeStop = (EditText)findViewById(R.id.borg_et_task_timeStop);
         mEtTimeUsed = (EditText)findViewById(R.id.borg_et_task_timeUsed);
         mEtScore = (EditText)findViewById(R.id.borg_et_task_score);
+        mEtImportant = (EditText)findViewById(R.id.borg_et_task_importantIdex);
+        mEtUrgent = (EditText)findViewById(R.id.borg_et_task_urgentIdex);
+        mEtImportant.setOnClickListener(this);
+        mEtUrgent.setOnClickListener(this);
         findViewById(R.id.borg_btn_task_save).setOnClickListener(this);
         findViewById(R.id.borg_btn_task_start).setOnClickListener(this);
         findViewById(R.id.borg_btn_task_complete).setOnClickListener(this);
         findViewById(R.id.borg_btn_task_pause).setOnClickListener(this);
         findViewById(R.id.borg_btn_task_resume).setOnClickListener(this);
         if (mode==MODE_ADD){
+            //填写默认值
+            mEtImportant.setText(R.string.middle);
+            mEtUrgent.setText(R.string.middle);
+            //按钮的状态
             findViewById(R.id.borg_view_task_timeStop).setVisibility(View.GONE);
             findViewById(R.id.borg_view_task_timeStart).setVisibility(View.GONE);
             findViewById(R.id.borg_view_task_timeUsed).setVisibility(View.GONE);
@@ -118,9 +130,35 @@ public class TaskActivity extends BasicActivity implements ITaskActivity{
                 presenter.resumeTask();
                 fillUI(mEntity);
                 break;
+            case R.id.borg_et_task_importantIdex:
+                selectImportantIdex();
+                break;
+            case R.id.borg_et_task_urgentIdex:
+                selectUrgentInde();
+                break;
             default:
                 break;
         }
+    }
+
+    public void selectImportantIdex(){
+        UrgentSelectDlg dlg = new UrgentSelectDlg(this);
+        dlg.setGenderSelectListener(new UrgentSelectDlg.onIndexSelectListener() {
+            @Override
+            public void select(int i) {
+                mEtImportant.setText(UrgentUtils.getUrgentName(i));
+            }
+        });
+    }
+
+    public void selectUrgentInde(){
+        UrgentSelectDlg dlg = new UrgentSelectDlg(this);
+        dlg.setGenderSelectListener(new UrgentSelectDlg.onIndexSelectListener() {
+            @Override
+            public void select(int i) {
+                mEtUrgent.setText(UrgentUtils.getUrgentName(i));
+            }
+        });
     }
 
     /**
@@ -128,12 +166,13 @@ public class TaskActivity extends BasicActivity implements ITaskActivity{
      * @return
      */
     public TaskEntity getTaskEntityFromUI(){
-        TaskEntity entity = new TaskEntity();
-        entity.setTitle(mEtTitle.getText().toString());
-        entity.setDescription(mEtDescription.getText().toString());
-        entity.setTarget(mEtTarget.getText().toString());
-        entity.setStep(mEtStep.getText().toString());
-        return entity;
+        mEntity.setTitle(mEtTitle.getText().toString());
+        mEntity.setDescription(mEtDescription.getText().toString());
+        mEntity.setTarget(mEtTarget.getText().toString());
+        mEntity.setStep(mEtStep.getText().toString());
+        mEntity.setImportantIdex(UrgentUtils.getUrgentIdex(mEtImportant.getText().toString()));
+        mEntity.setUrgentIdex(UrgentUtils.getUrgentIdex(mEtUrgent.getText().toString()));
+        return mEntity;
     }
 
     @Override
@@ -170,6 +209,8 @@ public class TaskActivity extends BasicActivity implements ITaskActivity{
                 completeUI();
                 break;
         }
+        mEtUrgent.setText(UrgentUtils.getUrgentName(entity.getUrgentIdex()));
+        mEtImportant.setText(UrgentUtils.getUrgentName(entity.getImportantIdex()));
     }
 
     private void normalUI(){
@@ -276,10 +317,13 @@ public class TaskActivity extends BasicActivity implements ITaskActivity{
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.borg_action_task_delete:
+            case R.id.borg_action_task_delete://删除任务
                 presenter.deleteTask();
                 finish();
                 break;
+            case R.id.borg_action_task_update://修改任务
+                getTaskEntityFromUI();
+                presenter.updateTask();
         }
         return true;
     }

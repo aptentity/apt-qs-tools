@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="setting_activity_no_call_default">#FFFFFF</color>
+    <color name="setting_custom_button_state_color">#a0a0a0</color>
+    <color name="setting_custom_button_name_color">#454545</color>
+    <color name="setting_custom_all_button_background">#FFFFFF</color>
+    <color name="setting_activity_background">#FFFFFF</color>
+</resources>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:background="@color/setting_activity_no_call_default">
+    <Button
+        android:id="@+id/btn_high"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/settings_custom_btn_view_height"
+        android:background="@color/setting_custom_all_button_background"
+        android:text="@string/high"
+        android:textColor="@color/setting_custom_button_name_color"
+        android:textSize="@dimen/settings_custom_btn_text_size"/>
+    <Button
+        android:id="@+id/btn_middle"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/settings_custom_btn_view_height"
+        android:background="@color/setting_custom_all_button_background"
+        android:text="@string/middle"
+        android:textColor="@color/setting_custom_button_name_color"
+        android:textSize="@dimen/settings_custom_btn_text_size"/>
+    <Button
+        android:id="@+id/btn_low"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/settings_custom_btn_view_height"
+        android:background="@color/setting_custom_all_button_background"
+        android:text="@string/low"
+        android:textColor="@color/setting_custom_button_name_color"
+        android:textSize="@dimen/settings_custom_btn_text_size"/>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/logout_dialog_cut_line_big"
+        android:background="@color/setting_activity_background"/>
+    
+    <Button
+        android:id="@+id/btn_cancel"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/settings_custom_btn_view_height"
+        android:background="@color/setting_custom_all_button_background"
+        android:text="@string/equipment_settings_logout_dialog_cancel"
+        android:textColor="@color/setting_custom_button_name_color"
+        android:textSize="@dimen/settings_custom_btn_text_size"/>
+</LinearLayout>

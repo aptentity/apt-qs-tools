@@ -93,6 +93,12 @@ public class TaskPresenter {
         entity.update(activity.getContext());
     }
 
+    /**
+     * 1-9,9高、5中、1低
+     * 预留6档，足够了
+     * @param entity
+     * @return
+     */
     public int calculatScore(TaskEntity entity){
         //重要性系数
         int importantIndex = 50;
@@ -100,8 +106,8 @@ public class TaskPresenter {
 
         int important = entity.getImportantIdex();
         int urgent = entity.getUrgentIdex();
-        int importantScore = importantIndex*important/3;
-        int urgentScore = urgentIndex*urgent/3;
+        int importantScore = importantIndex*important/9;
+        int urgentScore = urgentIndex*urgent/9;
         int score = importantScore+urgentScore;
         return score;
     }
@@ -113,6 +119,11 @@ public class TaskPresenter {
         long time = System.currentTimeMillis();
         entity.setStatus(TaskEntity.STATUS_PAUSE);
         entity.setTimeUsed(entity.getTimeUsed() + (time - entity.getTimeThisTime()));
+        entity.update(activity.getContext());
+    }
+
+    public void updateTask(){
+        TaskEntity entity = activity.getTaskEntity();
         entity.update(activity.getContext());
     }
 }

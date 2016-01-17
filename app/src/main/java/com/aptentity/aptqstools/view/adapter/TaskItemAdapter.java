@@ -50,9 +50,7 @@ public class TaskItemAdapter extends BaseAdapter{
             holder = new ViewHolder();
             convertView = mInflater.inflate(R.layout.task_item, null);
             holder.title = (TextView)convertView.findViewById(R.id.tv_task_name);
-            holder.cbFinish = convertView.findViewById(R.id.iv_finish);
-
-
+            holder.cbFinish = (ImageView)convertView.findViewById(R.id.iv_finish);
             convertView.setTag(holder);
         }else
         {
@@ -62,8 +60,13 @@ public class TaskItemAdapter extends BaseAdapter{
         //标题
         holder.title.setText(mList.get(i).getTitle());
         //任务状态
+        holder.cbFinish.setVisibility(View.VISIBLE);
         if (mList.get(i).getStatus()==TaskEntity.STATUS_COMPLETE){
-            holder.cbFinish.setVisibility(View.VISIBLE);
+            holder.cbFinish.setImageResource(R.mipmap.ic_clear);
+        }else if (mList.get(i).getStatus()==TaskEntity.STATUS_PAUSE){
+            holder.cbFinish.setImageResource(R.mipmap.pause);
+        }else if (mList.get(i).getStatus()==TaskEntity.STATUS_RUNNING){
+            holder.cbFinish.setImageResource(R.mipmap.playing);
         }else {
             holder.cbFinish.setVisibility(View.GONE);
         }
@@ -73,8 +76,7 @@ public class TaskItemAdapter extends BaseAdapter{
 
     static class ViewHolder
     {
-        public View cbFinish;
-        public ImageView img;
+        public ImageView cbFinish;
         public TextView title;
         public TextView info;
     }
