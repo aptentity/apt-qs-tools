@@ -1,5 +1,8 @@
 package com.aptentity.aptqstools.application;
 
+import android.content.Context;
+import android.os.Handler;
+
 import com.aptentity.aptqstools.model.dao.LocationDBEntity;
 import com.aptentity.aptqstools.utils.Common;
 import com.aptentity.aptqstools.utils.LogHelper;
@@ -19,7 +22,7 @@ public class QsApplication extends LitePalApplication{
     public GeofenceClient mGeofenceClient;
     public MyLocationListener mMyLocationListener;
     public static QsApplication instance;
-
+    private static Context mContext;
     public static QsApplication getInstance() {
         return instance;
     }
@@ -27,6 +30,7 @@ public class QsApplication extends LitePalApplication{
     @Override
     public void onCreate() {
         super.onCreate();
+        mContext = getApplicationContext();
         instance = this;
         Bmob.initialize(this, "22223a5f4df26be225ba36877a9445ae");
         //启动service
@@ -41,8 +45,15 @@ public class QsApplication extends LitePalApplication{
         option.setScanSpan(5000);
         option.setIsNeedAddress(true);
         mLocationClient.setLocOption(option);
+        mMainThreadHandler = new Handler();
     }
-
+    private static Handler mMainThreadHandler = null;
+    public static Handler getMainThreadHandler() {
+        return mMainThreadHandler;
+    }
+    public static Context getAppContext() {
+        return mContext;
+    }
     public class MyLocationListener implements BDLocationListener {
 
         @Override

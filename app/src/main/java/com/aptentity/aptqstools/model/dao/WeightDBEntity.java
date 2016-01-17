@@ -3,10 +3,12 @@ package com.aptentity.aptqstools.model.dao;
 
 import org.litepal.crud.DataSupport;
 
+import cn.bmob.v3.BmobObject;
+
 /*
  * 体重数据库对象
  */
-public class WeightDBEntity extends DataSupport{
+public class WeightDBEntity extends BmobObject {
     private String uuid="";//用户标示符
     private float weight=0;//体重
     private long timestamp=0;//时间戳，测试时间

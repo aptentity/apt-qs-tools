@@ -9,9 +9,12 @@ import android.widget.Toast;
 
 import com.aptentity.aptqstools.R;
 import com.aptentity.aptqstools.model.dao.HeartRateDBEntity;
+import com.aptentity.aptqstools.model.utils.ToastUtils;
 import com.aptentity.aptqstools.utils.Common;
 
 import java.util.Date;
+
+import cn.bmob.v3.listener.SaveListener;
 
 public class HeartRateActivity extends Activity {
     private EditText etHR,etNote;
@@ -47,9 +50,19 @@ public class HeartRateActivity extends Activity {
                     hre.setTimestamp(System.currentTimeMillis());
                     hre.setUuid(Common.UUID);
                     hre.setType(btnType.getText().toString());
-                    hre.saveThrows();
+                    hre.save(HeartRateActivity.this, new SaveListener() {
+                        @Override
+                        public void onSuccess() {
+                            ToastUtils.showShort(R.string.save_success);
+                            finish();
+                        }
+
+                        @Override
+                        public void onFailure(int i, String s) {
+                            ToastUtils.showShort(R.string.save_fail);
+                        }
+                    });
                 }
-                finish();
             }
         });
 

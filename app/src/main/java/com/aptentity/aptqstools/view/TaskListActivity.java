@@ -88,13 +88,13 @@ public class TaskListActivity extends BasicActivity {
     private void getData(){
         switch (mDataType){
             case 0:
-                getAllTasks();
+                getNormalTasks();
                 break;
             case 1:
                 getCompletedTasks();
                 break;
             case 2:
-                getNormalTasks();
+                getAllTasks();
                 break;
         }
     }

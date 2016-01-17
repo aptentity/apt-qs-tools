@@ -14,9 +14,12 @@ import com.aptentity.aptqstools.R;
 import com.aptentity.aptqstools.model.dao.WeightDBEntity;
 import com.aptentity.aptqstools.model.dao.WeightEntity;
 import com.aptentity.aptqstools.model.dao.WeightSceneType;
+import com.aptentity.aptqstools.model.utils.ToastUtils;
 import com.aptentity.aptqstools.utils.Common;
 
 import java.util.Date;
+
+import cn.bmob.v3.listener.SaveListener;
 
 public class WeightActivity extends Activity {
 
@@ -59,9 +62,20 @@ public class WeightActivity extends Activity {
                     java.text.DateFormat format = new java.text.SimpleDateFormat(
                             Common.FOMAT);
                     e.setDate(format.format(new Date()));
-                    e.saveThrows();
+                    e.save(WeightActivity.this, new SaveListener() {
+                        @Override
+                        public void onSuccess() {
+                            ToastUtils.showShort(R.string.save_success);
+                            finish();
+                        }
+
+                        @Override
+                        public void onFailure(int i, String s) {
+                            ToastUtils.showShort(R.string.save_fail);
+                        }
+                    });
                 }
-                finish();
+
             }
         });
 
