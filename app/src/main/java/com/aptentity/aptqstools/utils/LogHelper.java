@@ -23,7 +23,7 @@ public class LogHelper {
     static FileWriter writer = null;
     static FileWriter writer2 = null;
     private static boolean debug = true;
-    static String tag = "aptqs_";
+    static String tag = "borg_qs_";
     private static final String LOG_FILE_NAME = "/qslog%g.txt";
     private static final int LOG_FILE_SIZE = 500 * 1024;// 500K
     private static final int LOG_FILE_NUMBER = 2;

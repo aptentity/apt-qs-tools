@@ -13,7 +13,7 @@
         <mapping class="com.aptentity.aptqstools.model.dao.WeightDBEntity"></mapping>
         <mapping class="com.aptentity.aptqstools.model.dao.HeartRateDBEntity"></mapping>
         <mapping class="com.aptentity.aptqstools.model.dao.LocationDBEntity"></mapping>
-        <mapping class="com.aptentity.aptqstools.model.dao.TaskEntity"></mapping>
+        <mapping class="com.aptentity.aptqstools.model.dao.TaskDescribe"></mapping>
     </list>
 
 </litepal>

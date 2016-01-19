@@ -27,6 +27,7 @@ public class TaskDescribe extends BmobObject {
     private String timeEndS="";//结束时间
     private long timeStartEstimated=0;//计划开始时间
     private long timeEndEstimated=0;//计划完成时间
+    private int type=0;//0-标准任务、1-
 
     public long getTimeThisTime() {
         return timeThisTime;

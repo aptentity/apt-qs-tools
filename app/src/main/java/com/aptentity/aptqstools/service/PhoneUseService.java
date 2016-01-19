@@ -66,6 +66,10 @@ public class PhoneUseService extends Service {
 
     private void getAppUse() {
         String newTask = Common.getCurrentPkgName(getApplicationContext());
+        if (oldTask==null){
+            oldTask = newTask;
+            return;
+        }
         if (!oldTask.equals(newTask)) {
             CharSequence c = "";
             CharSequence oldc = "";
