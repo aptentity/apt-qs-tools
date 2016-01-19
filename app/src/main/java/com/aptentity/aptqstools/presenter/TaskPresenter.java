@@ -30,18 +30,23 @@ public class TaskPresenter {
         this.activity = activity;
     }
 
+    /**
+     * 获取任务
+     * @param taskId
+     * @param callback
+     */
     public void getTask(String taskId,GetListener<TaskDescribe> callback){
-        BmobQuery<TaskDescribe> query = new BmobQuery<TaskDescribe>();
-        //query.setCachePolicy(BmobQuery.CachePolicy.CACHE_ELSE_NETWORK);
-        query.getObject(activity.getContext(), taskId, callback);
+        LogHelper.show(TAG,"getTask");
+        TaskDBHelper.getTask(taskId,callback);
     }
 
     /**
      * 创建任务
      */
     public void createTask(ResultCallback callback){
-        TaskDescribe entity = activity.getTaskEntity();
-        TaskDBHelper.createTask(entity,callback);
+        LogHelper.show(TAG,"createTask");
+        TaskDescribe entity = activity.getTaskEntityFromUI();
+        TaskDBHelper.createTask(entity, callback);
     }
 
     /**
@@ -49,31 +54,16 @@ public class TaskPresenter {
      * 需要将任务描述和任务执行记录清除
      */
     public void deleteTask(){
-        //删除任务描述
-        TaskDescribe entity = activity.getTaskEntity();
-        entity.delete(activity.getContext(), new DeleteListener() {
+        LogHelper.show(TAG,"deleteTask");
+        TaskDBHelper.deleteTask(activity.getTaskEntity(), new ResultCallback() {
             @Override
             public void onSuccess() {
-                LogHelper.show(TAG, "deleteTask onSuccess");
+
             }
 
             @Override
-            public void onFailure(int i, String s) {
-                LogHelper.show(TAG, "deleteTask onFailure:" + i + ";" + s);
-            }
-        });
-        //删除任务执行记录
-        TaskExecuteRecord execute = new TaskExecuteRecord();
-        execute.setObjectId(entity.getObjectId());
-        entity.delete(activity.getContext(), new DeleteListener() {
-            @Override
-            public void onSuccess() {
-                LogHelper.show(TAG, "delete TaskExecuteRecord onSuccess");
-            }
+            public void onFailed(int code, String msg) {
 
-            @Override
-            public void onFailure(int i, String s) {
-                LogHelper.show(TAG, "delete TaskExecuteRecord onFailure:" + i + ";" + s);
             }
         });
     }
@@ -83,29 +73,15 @@ public class TaskPresenter {
      */
     public void startTask(){
         LogHelper.show(TAG,"startTask");
-        //更新任务描述
-        long time = System.currentTimeMillis();
-        TaskDescribe entity = activity.getTaskEntity();
-        entity.setStatus(TaskDescribe.STATUS_RUNNING);//更新状态
-        entity.setTimeStart(time);//更新开始的时间
-        entity.setTimeStartS(TimeUtils.transferLongToDate(time));
-        entity.setTimeThisTime(time);
-        entity.update(activity.getContext());
-
-        //创建任务执行记录
-        final TaskExecuteRecord executeRecord = new TaskExecuteRecord();
-        executeRecord.setTaskId(entity.getObjectId());
-        executeRecord.setTimeStart(time);
-        executeRecord.save(activity.getContext(), new SaveListener() {
+        TaskDBHelper.startTask(activity.getTaskEntity(), new ResultCallback() {
             @Override
             public void onSuccess() {
-                LogHelper.show(TAG, "startTask save TaskExecuteRecord onSuccess");
-                mExecuteRecord = executeRecord;
+
             }
 
             @Override
-            public void onFailure(int i, String s) {
-                LogHelper.show(TAG, "startTask save TaskExecuteRecord onFailure");
+            public void onFailed(int code, String msg) {
+
             }
         });
     }
@@ -115,41 +91,15 @@ public class TaskPresenter {
      */
     public void completTask(){
         LogHelper.show(TAG,"completTask");
-        //更新任务描述
-        final long time = System.currentTimeMillis();
-        TaskDescribe entity = activity.getTaskEntity();
-        entity.setTimeEnd(time);
-        entity.setTimeEndS(TimeUtils.transferLongToDate(time));
-        //正在计时
-        if (entity.getStatus()== TaskDescribe.STATUS_RUNNING){
-            entity.setTimeUsed(entity.getTimeUsed()+(time-entity.getTimeThisTime()));
-        }
-        entity.setStatus(TaskDescribe.STATUS_COMPLETE);
-        entity.setScore(calculatScore(entity));
-        entity.update(activity.getContext());
-
-        //更新任务执行记录
-        getCurrentExecuteTask(new onGetCurrentExecuteTaskCallback() {
+        TaskDBHelper.completeTask(activity.getTaskEntity(), new ResultCallback() {
             @Override
-            public void onResult(TaskExecuteRecord task) {
-                LogHelper.show(TAG, "completTask getCurrentExecuteTask:" + task.getObjectId());
-                if (task==null) {
-                    return;
-                }
-                LogHelper.show(TAG, "completTask update TaskExecuteRecord");
-                task.setTimeStop(time);
-                task.update(activity.getContext(), new UpdateListener() {
-                    @Override
-                    public void onSuccess() {
-                        LogHelper.show(TAG, "completTask update TaskExecuteRecord onSuccess");
-                    }
+            public void onSuccess() {
 
-                    @Override
-                    public void onFailure(int i, String s) {
-                        LogHelper.show(TAG, "completTask update TaskExecuteRecord onFailure");
-                    }
-                });
-                mExecuteRecord=null;//置为空
+            }
+
+            @Override
+            public void onFailed(int code, String msg) {
+
             }
         });
     }
@@ -159,27 +109,15 @@ public class TaskPresenter {
      */
     public void resumeTask(){
         LogHelper.show(TAG, "resumeTask");
-        //更新任务描述
-        TaskDescribe entity = activity.getTaskEntity();
-        entity.setStatus(TaskDescribe.STATUS_RUNNING);
-        long time = System.currentTimeMillis();
-        entity.setTimeThisTime(time);
-        entity.update(activity.getContext());
-
-        //创建任务执行记录
-        final TaskExecuteRecord executeRecord = new TaskExecuteRecord();
-        executeRecord.setTaskId(entity.getObjectId());
-        executeRecord.setTimeStart(time);
-        executeRecord.save(activity.getContext(), new SaveListener() {
+        TaskDBHelper.resumeTask(activity.getTaskEntity(), new ResultCallback() {
             @Override
             public void onSuccess() {
-                LogHelper.show(TAG, "resumeTask save TaskExecuteRecord onSuccess");
-                mExecuteRecord = executeRecord;
+
             }
 
             @Override
-            public void onFailure(int i, String s) {
-                LogHelper.show(TAG, "resumeTask save TaskExecuteRecord onFailure");
+            public void onFailed(int code, String msg) {
+
             }
         });
     }
@@ -189,94 +127,31 @@ public class TaskPresenter {
      */
     public void pauseTask(){
         LogHelper.show(TAG, "pauseTask");
-        TaskDescribe entity = activity.getTaskEntity();
-        final long time = System.currentTimeMillis();
-        entity.setStatus(TaskDescribe.STATUS_PAUSE);
-        entity.setTimeUsed(entity.getTimeUsed() + (time - entity.getTimeThisTime()));
-        entity.update(activity.getContext());
-        //更新任务执行记录
-        getCurrentExecuteTask(new onGetCurrentExecuteTaskCallback() {
+        TaskDBHelper.pauseTask(activity.getTaskEntity(), new ResultCallback() {
             @Override
-            public void onResult(TaskExecuteRecord task) {
-                LogHelper.show(TAG, "completTask getCurrentExecuteTask:" + task.getObjectId());
-                if (task==null) {
-                    return;
-                }
-                LogHelper.show(TAG, "completTask update TaskExecuteRecord");
-                task.setTimeStop(time);
-                task.update(activity.getContext(), new UpdateListener() {
-                    @Override
-                    public void onSuccess() {
-                        LogHelper.show(TAG, "completTask update TaskExecuteRecord onSuccess");
-                    }
+            public void onSuccess() {
 
-                    @Override
-                    public void onFailure(int i, String s) {
-                        LogHelper.show(TAG, "completTask update TaskExecuteRecord onFailure");
-                    }
-                });
-                mExecuteRecord=null;//置为空
+            }
+
+            @Override
+            public void onFailed(int code, String msg) {
+
             }
         });
-    }
-
-    /**
-     * 1-9,9高、5中、1低
-     * 预留6档，足够了
-     * @param entity
-     * @return
-     */
-    public int calculatScore(TaskDescribe entity){
-        //重要性系数
-        int importantIndex = 50;
-        int urgentIndex=50;
-
-        int important = entity.getImportantIdex();
-        int urgent = entity.getUrgentIdex();
-        int importantScore = importantIndex*important/9;
-        int urgentScore = urgentIndex*urgent/9;
-        int score = importantScore+urgentScore;
-        return score;
     }
 
     public void updateTask(){
-        TaskDescribe entity = activity.getTaskEntity();
-        entity.update(activity.getContext());
-    }
-
-    private TaskExecuteRecord mExecuteRecord;
-    /**
-     * 获取正在执行的任务
-     * @return
-     */
-    private void getCurrentExecuteTask(final onGetCurrentExecuteTaskCallback callback){
-        //如果已经存在直接返回
-        if (mExecuteRecord!=null){
-            callback.onResult(mExecuteRecord);
-        }
-        //如果没有则去查询
-        LogHelper.show(TAG, "getCurrentExecuteTask");
-        BmobQuery<TaskExecuteRecord> query = new BmobQuery<TaskExecuteRecord>();
-        query.addWhereEqualTo("timeStop", 0);
-        query.findObjects(QsApplication.getInstance(), new FindListener<TaskExecuteRecord>() {
+        LogHelper.show(TAG, "updateTask");
+        TaskDBHelper.updateTask(activity.getTaskEntity(), new ResultCallback() {
             @Override
-            public void onSuccess(List<TaskExecuteRecord> list) {
-                LogHelper.show(TAG, "getCurrentExecuteTask onSuccess");
-                if (list.size()>0){
-                    mExecuteRecord = list.get(0);
-                }
-                callback.onResult(mExecuteRecord);
+            public void onSuccess() {
+
             }
 
             @Override
-            public void onError(int i, String s) {
-                LogHelper.show(TAG, "getCurrentExecuteTask onError");
-                callback.onResult(null);
+            public void onFailed(int code, String msg) {
+
             }
         });
-    }
-
-    public interface onGetCurrentExecuteTaskCallback{
-        public void onResult(TaskExecuteRecord task);
     }
 }
