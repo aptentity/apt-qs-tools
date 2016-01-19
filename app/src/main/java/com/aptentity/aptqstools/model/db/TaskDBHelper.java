@@ -42,18 +42,18 @@ public class TaskDBHelper {
     }
 
     public static void updateTask(TaskDescribe entity,final ResultCallback callback){
-        LogHelper.show(TAG,"updateTask");
+        LogHelper.show(TAG, "updateTask");
         entity.update(mContext, new UpdateListener() {
             @Override
             public void onSuccess() {
-                LogHelper.show(TAG,"updateTask onSuccess");
+                LogHelper.show(TAG, "updateTask onSuccess");
                 callback.onSuccess();
             }
 
             @Override
             public void onFailure(int i, String s) {
-                LogHelper.show(TAG,"updateTask onFailure");
-                callback.onFailed(i,s);
+                LogHelper.show(TAG, "updateTask onFailure");
+                callback.onFailed(i, s);
             }
         });
     }
@@ -70,14 +70,14 @@ public class TaskDBHelper {
         entity.save(mContext, new SaveListener() {
             @Override
             public void onSuccess() {
-                LogHelper.show(TAG,"createTask onSuccess");
+                LogHelper.show(TAG, "createTask onSuccess");
                 callback.onSuccess();
             }
 
             @Override
             public void onFailure(int i, String s) {
-                LogHelper.show(TAG,"createTask onFailure:"+i+";"+s);
-                callback.onFailed(i,s);
+                LogHelper.show(TAG, "createTask onFailure:" + i + ";" + s);
+                callback.onFailed(i, s);
             }
         });
     }
@@ -93,39 +93,7 @@ public class TaskDBHelper {
             @Override
             public void onSuccess() {
                 LogHelper.show(TAG, "deleteTask TaskDescribe onSuccess");
-                //2.查询任务执行记录
-                BmobQuery<TaskExecuteRecord> query = new BmobQuery<TaskExecuteRecord>();
-                query.addWhereEqualTo("taskId", entity.getObjectId());
-                query.findObjects(mContext, new FindListener<TaskExecuteRecord>() {
-                    @Override
-                    public void onSuccess(List<TaskExecuteRecord> list) {
-                        //3.批量删除
-                        LogHelper.show(TAG, "deleteTask find TaskExecuteRecord onSuccess");
-                        List<BmobObject> taskList = new ArrayList<BmobObject>();
-                        for (TaskExecuteRecord item : list) {
-                            taskList.add(item);
-                        }
-                        new TaskExecuteRecord().deleteBatch(mContext, taskList, new DeleteListener() {
-                            @Override
-                            public void onSuccess() {
-                                LogHelper.show(TAG, "deleteTask delete TaskExecuteRecord onSuccess");
-                                callback.onSuccess();
-                            }
-
-                            @Override
-                            public void onFailure(int i, String s) {
-                                LogHelper.show(TAG, "deleteTask delete TaskExecuteRecord onFailures");
-                                callback.onFailed(i, s);
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onError(int i, String s) {
-                        LogHelper.show(TAG, "deleteTask find TaskExecuteRecord onFailure:" + i + ";" + s);
-                        callback.onFailed(i, s);
-                    }
-                });
+                deleteExecuteTask(entity.getObjectId(), callback);
             }
 
             @Override
@@ -170,30 +138,7 @@ public class TaskDBHelper {
         entity.setTimeUsed(entity.getTimeUsed() + (time - entity.getTimeThisTime()));
         entity.update(mContext);
         //更新任务执行记录
-        getCurrentExecuteTask(new GetCurrentExecuteTaskCallback() {
-            @Override
-            public void onResult(TaskExecuteRecord task) {
-                if (task == null) {
-                    return;
-                }
-                LogHelper.show(TAG, "completTask getCurrentExecuteTask:" + task.getObjectId());
-
-                LogHelper.show(TAG, "completTask update TaskExecuteRecord");
-                task.setTimeStop(time);
-                task.update(mContext, new UpdateListener() {
-                    @Override
-                    public void onSuccess() {
-                        LogHelper.show(TAG, "completTask update TaskExecuteRecord onSuccess");
-                    }
-
-                    @Override
-                    public void onFailure(int i, String s) {
-                        LogHelper.show(TAG, "completTask update TaskExecuteRecord onFailure");
-                    }
-                });
-                mExecuteRecord = null;//置为空
-            }
-        });
+        completeExecuteTask();
     }
 
     /**
@@ -210,7 +155,7 @@ public class TaskDBHelper {
         entity.update(mContext);
 
         //创建任务执行记录
-        createExecuteTask(entity.getObjectId(),callback);
+        createExecuteTask(entity.getObjectId(), callback);
     }
 
     /**
@@ -232,29 +177,7 @@ public class TaskDBHelper {
         entity.update(mContext);
 
         //更新任务执行记录
-        getCurrentExecuteTask(new GetCurrentExecuteTaskCallback() {
-            @Override
-            public void onResult(TaskExecuteRecord task) {
-                if (task == null) {
-                    return;
-                }
-                LogHelper.show(TAG, "completTask getCurrentExecuteTask:" + task.getObjectId());
-                LogHelper.show(TAG, "completTask update TaskExecuteRecord");
-                task.setTimeStop(time);
-                task.update(mContext, new UpdateListener() {
-                    @Override
-                    public void onSuccess() {
-                        LogHelper.show(TAG, "completTask update TaskExecuteRecord onSuccess");
-                    }
-
-                    @Override
-                    public void onFailure(int i, String s) {
-                        LogHelper.show(TAG, "completTask update TaskExecuteRecord onFailure");
-                    }
-                });
-                mExecuteRecord = null;//置为空
-            }
-        });
+        completeExecuteTask();
     }
 
     /**
@@ -288,6 +211,11 @@ public class TaskDBHelper {
         });
     }
 
+    /**
+     * 创建任务执行记录
+     * @param taskId
+     * @param callback
+     */
     private static void createExecuteTask(String taskId,final ResultCallback callback){
         long time = System.currentTimeMillis();
         final TaskExecuteRecord executeRecord = new TaskExecuteRecord();
@@ -304,7 +232,80 @@ public class TaskDBHelper {
             @Override
             public void onFailure(int i, String s) {
                 LogHelper.show(TAG, "resumeTask save TaskExecuteRecord onFailure");
-                callback.onFailed(i,s);
+                callback.onFailed(i, s);
+            }
+        });
+    }
+
+    /**
+     * 删除与任务描述相关的任务执行记录
+     * @param taskId
+     * @param callback
+     */
+    private static void deleteExecuteTask(String taskId,final ResultCallback callback){
+        //1.查询任务执行记录
+        BmobQuery<TaskExecuteRecord> query = new BmobQuery<TaskExecuteRecord>();
+        query.addWhereEqualTo("taskId", taskId);
+        query.findObjects(mContext, new FindListener<TaskExecuteRecord>() {
+            @Override
+            public void onSuccess(List<TaskExecuteRecord> list) {
+                //2.批量删除
+                LogHelper.show(TAG, "deleteTask find TaskExecuteRecord onSuccess");
+                List<BmobObject> taskList = new ArrayList<BmobObject>();
+                for (TaskExecuteRecord item : list) {
+                    taskList.add(item);
+                }
+                new TaskExecuteRecord().deleteBatch(mContext, taskList, new DeleteListener() {
+                    @Override
+                    public void onSuccess() {
+                        LogHelper.show(TAG, "deleteTask delete TaskExecuteRecord onSuccess");
+                        callback.onSuccess();
+                    }
+
+                    @Override
+                    public void onFailure(int i, String s) {
+                        LogHelper.show(TAG, "deleteTask delete TaskExecuteRecord onFailures");
+                        callback.onFailed(i, s);
+                    }
+                });
+            }
+
+            @Override
+            public void onError(int i, String s) {
+                LogHelper.show(TAG, "deleteTask find TaskExecuteRecord onFailure:" + i + ";" + s);
+                callback.onFailed(i, s);
+            }
+        });
+    }
+
+    /**
+     * 完成一条任务执行记录
+     */
+    private static void completeExecuteTask(){
+        getCurrentExecuteTask(new GetCurrentExecuteTaskCallback() {
+            @Override
+            public void onResult(TaskExecuteRecord task) {
+                if (task == null) {
+                    return;
+                }
+                LogHelper.show(TAG, "completTask getCurrentExecuteTask:" + task.getObjectId());
+
+                LogHelper.show(TAG, "completTask update TaskExecuteRecord");
+                long time = System.currentTimeMillis();
+                task.setTimeStop(time);
+                task.setTimeUsed(task.getTimeStop()-task.getTimeStart());
+                task.update(mContext, new UpdateListener() {
+                    @Override
+                    public void onSuccess() {
+                        LogHelper.show(TAG, "completTask update TaskExecuteRecord onSuccess");
+                    }
+
+                    @Override
+                    public void onFailure(int i, String s) {
+                        LogHelper.show(TAG, "completTask update TaskExecuteRecord onFailure");
+                    }
+                });
+                mExecuteRecord = null;//置为空
             }
         });
     }
