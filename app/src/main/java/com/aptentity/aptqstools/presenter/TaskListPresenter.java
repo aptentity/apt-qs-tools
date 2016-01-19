@@ -1,7 +1,7 @@
 package com.aptentity.aptqstools.presenter;
 
 import com.aptentity.aptqstools.application.QsApplication;
-import com.aptentity.aptqstools.model.dao.TaskEntity;
+import com.aptentity.aptqstools.model.dao.TaskDescribe;
 import com.aptentity.aptqstools.utils.LogHelper;
 import com.aptentity.aptqstools.view.TaskListActivity;
 
@@ -15,12 +15,12 @@ import cn.bmob.v3.listener.FindListener;
  */
 public class TaskListPresenter {
     private final String TAG = TaskListActivity.class.getSimpleName();
-    public void getAllTask(final FindListener<TaskEntity> findListener){
-        BmobQuery<TaskEntity> query = new BmobQuery<TaskEntity>();
+    public void getAllTask(final FindListener<TaskDescribe> findListener){
+        BmobQuery<TaskDescribe> query = new BmobQuery<TaskDescribe>();
         //query.setCachePolicy(BmobQuery.CachePolicy.CACHE_ELSE_NETWORK);
-        query.findObjects(QsApplication.getInstance(), new FindListener<TaskEntity>() {
+        query.findObjects(QsApplication.getInstance(), new FindListener<TaskDescribe>() {
             @Override
-            public void onSuccess(List<TaskEntity> list) {
+            public void onSuccess(List<TaskDescribe> list) {
                 LogHelper.show(TAG,"getAllTask onSuccess");
                 findListener.onSuccess(list);
             }
@@ -37,13 +37,13 @@ public class TaskListPresenter {
      * 获取已经完成的任务
      * @param findListener
      */
-    public void getCompletedTasks(final FindListener<TaskEntity> findListener){
-        BmobQuery<TaskEntity> query = new BmobQuery<TaskEntity>();
+    public void getCompletedTasks(final FindListener<TaskDescribe> findListener){
+        BmobQuery<TaskDescribe> query = new BmobQuery<TaskDescribe>();
         //query.setCachePolicy(BmobQuery.CachePolicy.CACHE_ELSE_NETWORK);
-        query.addWhereEqualTo("status",TaskEntity.STATUS_COMPLETE);
-        query.findObjects(QsApplication.getInstance(), new FindListener<TaskEntity>() {
+        query.addWhereEqualTo("status", TaskDescribe.STATUS_COMPLETE);
+        query.findObjects(QsApplication.getInstance(), new FindListener<TaskDescribe>() {
             @Override
-            public void onSuccess(List<TaskEntity> list) {
+            public void onSuccess(List<TaskDescribe> list) {
                 LogHelper.show(TAG,"getAllTask onSuccess");
                 findListener.onSuccess(list);
             }
@@ -60,21 +60,22 @@ public class TaskListPresenter {
      * 获取已经完成的任务
      * @param findListener
      */
-    public void getNormalTasks(final FindListener<TaskEntity> findListener){
-        BmobQuery<TaskEntity> query = new BmobQuery<TaskEntity>();
+    public void getNormalTasks(final FindListener<TaskDescribe> findListener){
+        BmobQuery<TaskDescribe> query = new BmobQuery<TaskDescribe>();
         //query.setCachePolicy(BmobQuery.CachePolicy.CACHE_ELSE_NETWORK);
-        query.addWhereEqualTo("status", TaskEntity.STATUS_NORMAL);
-        query.findObjects(QsApplication.getInstance(), new FindListener<TaskEntity>() {
+        int[] names = {TaskDescribe.STATUS_NORMAL, TaskDescribe.STATUS_RUNNING};
+        query.addWhereLessThanOrEqualTo("status", TaskDescribe.STATUS_RUNNING);
+        query.findObjects(QsApplication.getInstance(), new FindListener<TaskDescribe>() {
             @Override
-            public void onSuccess(List<TaskEntity> list) {
-                LogHelper.show(TAG,"getAllTask onSuccess");
+            public void onSuccess(List<TaskDescribe> list) {
+                LogHelper.show(TAG, "getAllTask onSuccess");
                 findListener.onSuccess(list);
             }
 
             @Override
             public void onError(int i, String s) {
-                LogHelper.show(TAG,"getAllTask onError:"+i+";"+s);
-                findListener.onError(i,s);
+                LogHelper.show(TAG, "getAllTask onError:" + i + ";" + s);
+                findListener.onError(i, s);
             }
         });
     }

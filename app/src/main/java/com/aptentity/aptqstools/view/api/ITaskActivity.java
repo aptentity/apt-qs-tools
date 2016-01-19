@@ -2,7 +2,7 @@ package com.aptentity.aptqstools.view.api;
 
 import android.content.Context;
 
-import com.aptentity.aptqstools.model.dao.TaskEntity;
+import com.aptentity.aptqstools.model.dao.TaskDescribe;
 
 /**
  * Created by gulliver on 16/1/3.
@@ -12,13 +12,13 @@ public interface ITaskActivity {
      * 从UI上获取task
      * @return
      */
-    public TaskEntity getTaskEntityFromUI();
+    public TaskDescribe getTaskEntityFromUI();
 
     /**
      *
      * @return
      */
-    public TaskEntity getTaskEntity();
+    public TaskDescribe getTaskEntity();
 
     public Context getContext();
 }

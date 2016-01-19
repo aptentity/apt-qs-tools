@@ -8,18 +8,15 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.aptentity.aptqstools.R;
-import com.aptentity.aptqstools.model.dao.TaskEntity;
-import com.aptentity.aptqstools.model.dao.TestEntity;
+import com.aptentity.aptqstools.model.dao.TaskDescribe;
 import com.aptentity.aptqstools.model.utils.ActivitiesUtils;
 import com.aptentity.aptqstools.presenter.TaskListPresenter;
 import com.aptentity.aptqstools.utils.LogHelper;
 import com.aptentity.aptqstools.view.adapter.TaskItemAdapter;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import cn.bmob.v3.listener.FindListener;
-import cn.bmob.v3.listener.SaveListener;
 
 /**
  * 任务列表
@@ -28,7 +25,7 @@ import cn.bmob.v3.listener.SaveListener;
 public class TaskListActivity extends BasicActivity {
     private final String TAG = TaskListActivity.class.getSimpleName();
     private TaskListPresenter presenter;
-    private List<TaskEntity> mListTask;
+    private List<TaskDescribe> mListTask;
     private ListView mDrawerList;
     private String[] mTitles;
     private DrawerLayout mDrawerLayout;
@@ -66,7 +63,7 @@ public class TaskListActivity extends BasicActivity {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
             LogHelper.show(TAG,"listview onItemClick");
-            TaskEntity entity = mListTask.get(i);
+            TaskDescribe entity = mListTask.get(i);
             ActivitiesUtils.startViewTaskActivity(TaskListActivity.this,entity);
         }
     };
@@ -91,10 +88,10 @@ public class TaskListActivity extends BasicActivity {
                 getNormalTasks();
                 break;
             case 1:
-                getCompletedTasks();
+                getAllTasks();
                 break;
             case 2:
-                getAllTasks();
+                getCompletedTasks();
                 break;
         }
     }
@@ -137,9 +134,9 @@ public class TaskListActivity extends BasicActivity {
      * @return
      */
     private void getAllTasks(){
-        presenter.getAllTask(new FindListener<TaskEntity>(){
+        presenter.getAllTask(new FindListener<TaskDescribe>(){
             @Override
-            public void onSuccess(final List<TaskEntity> list) {
+            public void onSuccess(final List<TaskDescribe> list) {
                 updateTaskList(list);
             }
 
@@ -154,9 +151,9 @@ public class TaskListActivity extends BasicActivity {
      * 获得完成的任务
      */
     private void getCompletedTasks() {
-        presenter.getCompletedTasks(new FindListener<TaskEntity>() {
+        presenter.getCompletedTasks(new FindListener<TaskDescribe>() {
             @Override
-            public void onSuccess(List<TaskEntity> list) {
+            public void onSuccess(List<TaskDescribe> list) {
                 updateTaskList(list);
             }
 
@@ -171,9 +168,9 @@ public class TaskListActivity extends BasicActivity {
      * 获得正常状态任务
      */
     private void getNormalTasks() {
-        presenter.getNormalTasks(new FindListener<TaskEntity>() {
+        presenter.getNormalTasks(new FindListener<TaskDescribe>() {
             @Override
-            public void onSuccess(List<TaskEntity> list) {
+            public void onSuccess(List<TaskDescribe> list) {
                 updateTaskList(list);
             }
 
@@ -188,7 +185,7 @@ public class TaskListActivity extends BasicActivity {
      * 更新任务列表
      * @param list
      */
-    private void updateTaskList(final List<TaskEntity> list){
+    private void updateTaskList(final List<TaskDescribe> list){
         mListTask = list;
         runOnUiThread(new Runnable() {
             @Override

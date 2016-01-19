@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.aptentity.aptqstools.activity.MainActivity;
-import com.aptentity.aptqstools.model.dao.TaskEntity;
+import com.aptentity.aptqstools.model.dao.TaskDescribe;
 import com.aptentity.aptqstools.utils.LogHelper;
 import com.aptentity.aptqstools.view.TaskActivity;
 
@@ -20,7 +20,7 @@ public class ActivitiesUtils {
         context.startActivity(intent);
     }
 
-    public static void startViewTaskActivity(Context context,TaskEntity entity){
+    public static void startViewTaskActivity(Context context,TaskDescribe entity){
         LogHelper.show(TAG,"startViewTaskActivity");
         String id = entity.getObjectId();
         LogHelper.show(TAG, "getBaseObjId:"+id);

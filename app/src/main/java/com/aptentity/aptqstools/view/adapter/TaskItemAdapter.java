@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.aptentity.aptqstools.R;
-import com.aptentity.aptqstools.model.dao.TaskEntity;
+import com.aptentity.aptqstools.model.dao.TaskDescribe;
 
 import java.util.List;
 
@@ -17,14 +17,14 @@ import java.util.List;
  * Created by gulliver on 16/1/12.
  */
 public class TaskItemAdapter extends BaseAdapter{
-    List<TaskEntity> mList;
+    List<TaskDescribe> mList;
     private LayoutInflater mInflater = null;
 
     public TaskItemAdapter(Context context){
         this.mInflater = LayoutInflater.from(context);
     }
 
-    public void setData(List<TaskEntity> list){
+    public void setData(List<TaskDescribe> list){
         mList = list;
     }
     @Override
@@ -61,11 +61,11 @@ public class TaskItemAdapter extends BaseAdapter{
         holder.title.setText(mList.get(i).getTitle());
         //任务状态
         holder.cbFinish.setVisibility(View.VISIBLE);
-        if (mList.get(i).getStatus()==TaskEntity.STATUS_COMPLETE){
+        if (mList.get(i).getStatus()== TaskDescribe.STATUS_COMPLETE){
             holder.cbFinish.setImageResource(R.mipmap.ic_clear);
-        }else if (mList.get(i).getStatus()==TaskEntity.STATUS_PAUSE){
+        }else if (mList.get(i).getStatus()== TaskDescribe.STATUS_PAUSE){
             holder.cbFinish.setImageResource(R.mipmap.pause);
-        }else if (mList.get(i).getStatus()==TaskEntity.STATUS_RUNNING){
+        }else if (mList.get(i).getStatus()== TaskDescribe.STATUS_RUNNING){
             holder.cbFinish.setImageResource(R.mipmap.playing);
         }else {
             holder.cbFinish.setVisibility(View.GONE);

@@ -13,8 +13,10 @@ import android.widget.EditText;
 
 import com.aptentity.aptqstools.R;
 import com.aptentity.aptqstools.activity.MainActivity;
-import com.aptentity.aptqstools.model.dao.TaskEntity;
+import com.aptentity.aptqstools.model.callback.ResultCallback;
+import com.aptentity.aptqstools.model.dao.TaskDescribe;
 import com.aptentity.aptqstools.model.utils.TimeUtils;
+import com.aptentity.aptqstools.model.utils.ToastUtils;
 import com.aptentity.aptqstools.model.utils.UrgentUtils;
 import com.aptentity.aptqstools.presenter.TaskPresenter;
 import com.aptentity.aptqstools.utils.LogHelper;
@@ -22,6 +24,7 @@ import com.aptentity.aptqstools.view.api.ITaskActivity;
 import com.aptentity.aptqstools.view.widget.UrgentSelectDlg;
 
 import cn.bmob.v3.listener.GetListener;
+import cn.bmob.v3.listener.SaveListener;
 
 public class TaskActivity extends BasicActivity implements ITaskActivity{
     public final String TAG = TaskActivity.class.getSimpleName();
@@ -29,7 +32,7 @@ public class TaskActivity extends BasicActivity implements ITaskActivity{
     public final static int MODE_VIEW=1;
     private int mode=0;//模式，0添加任务模式，1为查看任务模式
     private TaskPresenter presenter;
-    private TaskEntity mEntity=new TaskEntity();;
+    private TaskDescribe mEntity=new TaskDescribe();;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,9 +92,9 @@ public class TaskActivity extends BasicActivity implements ITaskActivity{
             findViewById(R.id.borg_btn_task_resume).setVisibility(View.GONE);
         }else if (MODE_VIEW==mode){
             String taskId = getIntent().getExtras().getString("task_id");
-            presenter.getTask(taskId, new GetListener<TaskEntity>() {
+            presenter.getTask(taskId, new GetListener<TaskDescribe>() {
                 @Override
-                public void onSuccess(TaskEntity entity) {
+                public void onSuccess(TaskDescribe entity) {
                     mEntity = entity;
                     fillUI(mEntity);
                 }
@@ -110,8 +113,18 @@ public class TaskActivity extends BasicActivity implements ITaskActivity{
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.borg_btn_task_save:
-                presenter.createTask();
-                finish();
+                presenter.createTask(new ResultCallback() {
+                    @Override
+                    public void onSuccess() {
+                        ToastUtils.showShort(R.string.save_success);
+                        finish();
+                    }
+
+                    @Override
+                    public void onFailed(int i, String s) {
+                        ToastUtils.showShort(R.string.save_fail);
+                    }
+                });
                 break;
             case R.id.borg_btn_task_start:
                 long time = System.currentTimeMillis();
@@ -166,19 +179,21 @@ public class TaskActivity extends BasicActivity implements ITaskActivity{
      *
      * @return
      */
-    public TaskEntity getTaskEntityFromUI(){
+    public TaskDescribe getTaskEntityFromUI(){
         mEntity.setTitle(mEtTitle.getText().toString());
         mEntity.setDescription(mEtDescription.getText().toString());
         mEntity.setTarget(mEtTarget.getText().toString());
         mEntity.setStep(mEtStep.getText().toString());
-        mEntity.setTimeEstimated(Long.parseLong(mEtTimeEstimated.getText().toString()));
+        try {
+            mEntity.setTimeEstimated(Long.parseLong(mEtTimeEstimated.getText().toString()));
+        }catch (Exception e){}
         mEntity.setImportantIdex(UrgentUtils.getUrgentIdex(mEtImportant.getText().toString()));
         mEntity.setUrgentIdex(UrgentUtils.getUrgentIdex(mEtUrgent.getText().toString()));
         return mEntity;
     }
 
     @Override
-    public TaskEntity getTaskEntity() {
+    public TaskDescribe getTaskEntity() {
         return mEntity;
     }
 
@@ -186,7 +201,7 @@ public class TaskActivity extends BasicActivity implements ITaskActivity{
      * 填充字段
      * @param entity
      */
-    private void fillUI(TaskEntity entity){
+    private void fillUI(TaskDescribe entity){
         LogHelper.show(TAG,"fill ui:"+entity.toString()+";"+entity.getObjectId());
         mEtTitle.setText(entity.getTitle());
         mEtDescription.setText(entity.getDescription());
@@ -198,16 +213,16 @@ public class TaskActivity extends BasicActivity implements ITaskActivity{
         mEtTimeUsed.setText(TimeUtils.formatLongToTimeStr(entity.getTimeUsed()));
         mEtTimeStop.setText(TimeUtils.transferLongToDate(entity.getTimeEnd()));
         switch (entity.getStatus()){
-            case TaskEntity.STATUS_NORMAL:
+            case TaskDescribe.STATUS_NORMAL:
                 normalUI();
                 break;
-            case TaskEntity.STATUS_RUNNING:
+            case TaskDescribe.STATUS_RUNNING:
                 runningUI();
                 break;
-            case TaskEntity.STATUS_PAUSE:
+            case TaskDescribe.STATUS_PAUSE:
                 pauseUI();
                 break;
-            case TaskEntity.STATUS_COMPLETE:
+            case TaskDescribe.STATUS_COMPLETE:
                 completeUI();
                 break;
         }
