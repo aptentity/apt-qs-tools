@@ -1,8 +1,14 @@
 package com.aptentity.aptqstools.model.dao;
 
-import org.litepal.crud.DataSupport;
+import com.aptentity.aptqstools.model.Env;
 
-public class LocationDBEntity extends DataSupport {
+import cn.bmob.v3.BmobObject;
+
+/**
+ * Created by Gulliver(feilong) on 16/1/20.
+ * 在线位置信息
+ */
+public class LocationOnlineDBEntity extends BmobObject {
     private long timestamp=0;
     private double Latitude;
     private double Longitude;
@@ -15,81 +21,125 @@ public class LocationDBEntity extends DataSupport {
     private String City;
     private String CityCode;
     private String District;
-    public LocationDBEntity() {
+    private String phone= Env.PhoneID+":"+ Env.Model;
 
+    public LocationOnlineDBEntity(){}
+    public LocationOnlineDBEntity(LocationDBEntity entity){
+        timestamp = entity.getTimestamp();
+        Latitude = entity.getLatitude();
+        Longitude = entity.getLongitude();
+        time = entity.getTime();
+        Radius = entity.getRadius();
+        Address = entity.getAddress();
+        Province = entity.getProvince();
+        Street = entity.getStreet();
+        StreetNumber = entity.getStreetNumber();
+        City = entity.getCity();
+        CityCode = entity.getCityCode();
+        District = entity.getDistrict();
     }
+
     public long getTimestamp() {
         return timestamp;
     }
+
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
     }
+
     public double getLatitude() {
         return Latitude;
     }
+
     public void setLatitude(double latitude) {
         Latitude = latitude;
     }
+
     public double getLongitude() {
         return Longitude;
     }
+
     public void setLongitude(double longitude) {
         Longitude = longitude;
     }
+
     public String getTime() {
         return time;
     }
+
     public void setTime(String time) {
         this.time = time;
     }
+
     public float getRadius() {
         return Radius;
     }
+
     public void setRadius(float radius) {
         Radius = radius;
     }
+
     public String getAddress() {
         return Address;
     }
+
     public void setAddress(String address) {
         Address = address;
     }
+
     public String getProvince() {
         return Province;
     }
+
     public void setProvince(String province) {
         Province = province;
     }
+
     public String getStreet() {
         return Street;
     }
+
     public void setStreet(String street) {
         Street = street;
     }
+
     public String getStreetNumber() {
         return StreetNumber;
     }
+
     public void setStreetNumber(String streetNumber) {
         StreetNumber = streetNumber;
     }
+
     public String getCity() {
         return City;
     }
+
     public void setCity(String city) {
         City = city;
     }
+
     public String getCityCode() {
         return CityCode;
     }
+
     public void setCityCode(String cityCode) {
         CityCode = cityCode;
     }
+
     public String getDistrict() {
         return District;
     }
+
     public void setDistrict(String district) {
         District = district;
     }
 
+    public String getPhone() {
+        return phone;
+    }
 
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 }

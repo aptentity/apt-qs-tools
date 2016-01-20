@@ -1,18 +1,25 @@
-package com.aptentity.aptqstools.model.dao;
+package com.aptentity.aptqstools.model.db;
 
+import com.aptentity.aptqstools.application.QsApplication;
+import com.aptentity.aptqstools.model.dao.AppUseDBEntity;
+import com.aptentity.aptqstools.model.dao.AppUseOnlineDBEntity;
+import com.aptentity.aptqstools.model.dao.ScreenDBEntity;
+import com.aptentity.aptqstools.model.dao.ScreenOnlineDBEntity;
 import com.aptentity.aptqstools.utils.LogHelper;
 import com.aptentity.aptqstools.utils.Common;
 
 import java.util.Date;
 
+import cn.bmob.v3.listener.SaveListener;
+
 /**
  * Created by Gulliver(feilong) on 15/10/4.
  */
 public class DbHelper {
-    private static long on = System.currentTimeMillis();
+    private static final String TAG = DbHelper.class.getSimpleName();
     public static void saveScreenOff(){
         try{
-            LogHelper.show("apt-qs screen off:" + (System.currentTimeMillis() - on));
+            LogHelper.show(TAG,"saveScreenOff");
             ScreenDBEntity se = new ScreenDBEntity();
             se.setUuid(Common.UUID);
             java.text.DateFormat format = new java.text.SimpleDateFormat(
@@ -20,7 +27,7 @@ public class DbHelper {
             se.setDate(format.format(new Date()));
             se.setTimestamp(System.currentTimeMillis());
             se.setType(ScreenDBEntity.ScreenStatusType.Off);
-            se.saveThrows();
+            saveScreen(se);
         }catch (Exception e){
             LogHelper.show("apt-qs screen off exception:" + e.toString());
         }
@@ -28,7 +35,7 @@ public class DbHelper {
 
     public static void saveScreenLockOff(){
         try{
-            LogHelper.show("apt-qs unlock screen:" + (System.currentTimeMillis() - on));
+            LogHelper.show(TAG, "saveScreenLockOff");
             ScreenDBEntity se = new ScreenDBEntity();
             se.setUuid(Common.UUID);
             java.text.DateFormat format = new java.text.SimpleDateFormat(
@@ -36,7 +43,7 @@ public class DbHelper {
             se.setDate(format.format(new Date()));
             se.setTimestamp(System.currentTimeMillis());
             se.setType(ScreenDBEntity.ScreenStatusType.Unlock);
-            se.saveThrows();
+            saveScreen(se);
         }catch (Exception e){
             LogHelper.show("apt-qs unlock screen exception:" + e.toString());
         }
@@ -45,8 +52,7 @@ public class DbHelper {
 
     public static void saveScreenOn(){
         try{
-            on = System.currentTimeMillis();
-            LogHelper.show("apt-qs screen on");
+            LogHelper.show(TAG, "saveScreenOn");
             ScreenDBEntity se = new ScreenDBEntity();
             se.setUuid(Common.UUID);
             java.text.DateFormat format = new java.text.SimpleDateFormat(
@@ -54,12 +60,34 @@ public class DbHelper {
             se.setDate(format.format(new Date()));
             se.setTimestamp(System.currentTimeMillis());
             se.setType(ScreenDBEntity.ScreenStatusType.On);
-            se.saveThrows();
+            saveScreen(se);
         }catch (Exception e){
             LogHelper.show("apt-qs screen on exception:" + e.toString());
         }
     }
 
+    private static void saveScreen(final ScreenDBEntity se){
+        LogHelper.show(TAG, "saveScreen");
+        ScreenOnlineDBEntity entity = new ScreenOnlineDBEntity(se);
+        entity.save(QsApplication.getContext(), new SaveListener() {
+            @Override
+            public void onSuccess() {
+                LogHelper.show(TAG, "saveScreen online onSuccess");
+                se.save();
+            }
+
+            @Override
+            public void onFailure(int i, String s) {
+                LogHelper.show(TAG, "saveScreen online onFailure");
+            }
+        });
+    }
+
+    /**
+     * 保存app关闭
+     * @param packageName
+     * @param appName
+     */
     public static void saveAppClose(String packageName,String appName){
         LogHelper.show("apt-qs close app : " + packageName + ":" + appName);
         AppUseDBEntity ae = new AppUseDBEntity();
@@ -69,18 +97,44 @@ public class DbHelper {
         ae.setPackageName(packageName);
         ae.setTimestamp(System.currentTimeMillis());
         ae.setType(AppUseDBEntity.AppStatusType.Close);
-        ae.saveThrows();
+        saveAppUse(ae);
     }
 
+    /**
+     * 保存app打开
+     * @param packageName
+     * @param appName
+     */
     public static void saveAppOpen(String packageName,String appName){
-        LogHelper.show("apt-qs open app : " + packageName + ":" + appName);
+        LogHelper.show(TAG, "saveAppOpen" + packageName + ":" + appName);
         java.text.DateFormat format = new java.text.SimpleDateFormat(Common.FOMAT);
-        AppUseDBEntity ae1 = new AppUseDBEntity();
-        ae1.setAppName(appName);
-        ae1.setDate(format.format(new Date()));
-        ae1.setPackageName(packageName);
-        ae1.setTimestamp(System.currentTimeMillis());
-        ae1.setType(AppUseDBEntity.AppStatusType.Open);
-        ae1.saveThrows();
+        final AppUseDBEntity ae = new AppUseDBEntity();
+        ae.setAppName(appName);
+        ae.setDate(format.format(new Date()));
+        ae.setPackageName(packageName);
+        ae.setTimestamp(System.currentTimeMillis());
+        ae.setType(AppUseDBEntity.AppStatusType.Open);
+        saveAppUse(ae);
+    }
+
+    /**
+     * 保存app使用
+     * @param ae
+     */
+    private static void saveAppUse(final AppUseDBEntity ae){
+        LogHelper.show(TAG, "saveAppUse");
+        AppUseOnlineDBEntity entity = new AppUseOnlineDBEntity(ae);
+        entity.save(QsApplication.getContext(), new SaveListener() {
+            @Override
+            public void onSuccess() {
+                LogHelper.show(TAG, "saveAppUse online onSuccess");
+            }
+
+            @Override
+            public void onFailure(int i, String s) {
+                LogHelper.show(TAG, "saveAppUse online onFailure");
+                ae.save();
+            }
+        });
     }
 }

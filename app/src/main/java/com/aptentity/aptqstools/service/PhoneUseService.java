@@ -9,7 +9,7 @@ import android.content.pm.PackageManager;
 import android.os.IBinder;
 
 import com.aptentity.aptqstools.application.MyReceiver;
-import com.aptentity.aptqstools.model.dao.DbHelper;
+import com.aptentity.aptqstools.model.db.DbHelper;
 import com.aptentity.aptqstools.utils.LogHelper;
 import com.aptentity.aptqstools.utils.Common;
 

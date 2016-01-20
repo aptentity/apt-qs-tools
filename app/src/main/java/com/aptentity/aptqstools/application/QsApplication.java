@@ -2,8 +2,11 @@ package com.aptentity.aptqstools.application;
 
 import android.content.Context;
 import android.os.Handler;
+import android.telephony.TelephonyManager;
 
+import com.aptentity.aptqstools.model.Env;
 import com.aptentity.aptqstools.model.dao.LocationDBEntity;
+import com.aptentity.aptqstools.model.db.LocationDBHelper;
 import com.aptentity.aptqstools.utils.Common;
 import com.aptentity.aptqstools.utils.LogHelper;
 import com.baidu.location.BDLocation;
@@ -46,6 +49,10 @@ public class QsApplication extends LitePalApplication{
         option.setIsNeedAddress(true);
         mLocationClient.setLocOption(option);
         mMainThreadHandler = new Handler();
+
+        //获取IMEI
+        TelephonyManager tm = (TelephonyManager) this.getSystemService(TELEPHONY_SERVICE);
+        Env.PhoneID = tm.getDeviceId();
     }
     private static Handler mMainThreadHandler = null;
     public static Handler getMainThreadHandler() {
@@ -100,7 +107,7 @@ public class QsApplication extends LitePalApplication{
                 entity.setStreetNumber(location.getStreetNumber());
                 entity.setTime(location.getTime());
                 entity.setTimestamp(System.currentTimeMillis());
-                entity.saveThrows();
+                LocationDBHelper.save(entity);
             }catch (Exception e){
                 LogHelper.v(e.toString());
             }

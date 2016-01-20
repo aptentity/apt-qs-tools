@@ -4,7 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.aptentity.aptqstools.model.dao.DbHelper;
+import com.aptentity.aptqstools.model.db.DbHelper;
 import com.aptentity.aptqstools.utils.LogHelper;
 
 /**

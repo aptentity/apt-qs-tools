@@ -1,6 +1,8 @@
 package com.aptentity.aptqstools.model.dao;
 
 
+import com.aptentity.aptqstools.model.Env;
+
 import org.litepal.crud.DataSupport;
 
 import cn.bmob.v3.BmobObject;
@@ -17,6 +19,7 @@ public class WeightDBEntity extends BmobObject {
     private String feeling="1";//测试时情绪
     private String note="1";//备注
     private String date;
+    private String phone= Env.PhoneID+":"+ Env.Model;
     
     public WeightDBEntity(WeightEntity entity){
         this.uuid = entity.uuid;
@@ -95,6 +98,12 @@ public class WeightDBEntity extends BmobObject {
     public void setDate(String date) {
         this.date = date;
     }
-    
-    
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 }
