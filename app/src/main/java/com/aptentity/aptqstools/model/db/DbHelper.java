@@ -1,15 +1,22 @@
 package com.aptentity.aptqstools.model.db;
 
+import android.text.TextUtils;
+
 import com.aptentity.aptqstools.application.QsApplication;
 import com.aptentity.aptqstools.model.dao.AppUseDBEntity;
 import com.aptentity.aptqstools.model.dao.AppUseOnlineDBEntity;
 import com.aptentity.aptqstools.model.dao.ScreenDBEntity;
 import com.aptentity.aptqstools.model.dao.ScreenOnlineDBEntity;
-import com.aptentity.aptqstools.utils.LogHelper;
 import com.aptentity.aptqstools.utils.Common;
+import com.aptentity.aptqstools.utils.LogHelper;
 
+import org.litepal.crud.DataSupport;
+
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import cn.bmob.v3.BmobObject;
 import cn.bmob.v3.listener.SaveListener;
 
 /**
@@ -62,7 +69,7 @@ public class DbHelper {
             se.setType(ScreenDBEntity.ScreenStatusType.On);
             saveScreen(se);
         }catch (Exception e){
-            LogHelper.show("apt-qs screen on exception:" + e.toString());
+            LogHelper.show(TAG,"apt-qs screen on exception:" + e.toString());
         }
     }
 
@@ -89,7 +96,9 @@ public class DbHelper {
      * @param appName
      */
     public static void saveAppClose(String packageName,String appName){
-        LogHelper.show("apt-qs close app : " + packageName + ":" + appName);
+        LogHelper.show(TAG,"apt-qs close app : " + packageName + ":" + appName);
+        if (TextUtils.isEmpty(packageName))
+            return;
         AppUseDBEntity ae = new AppUseDBEntity();
         ae.setAppName(appName);
         java.text.DateFormat format = new java.text.SimpleDateFormat(Common.FOMAT);
@@ -106,7 +115,9 @@ public class DbHelper {
      * @param appName
      */
     public static void saveAppOpen(String packageName,String appName){
-        LogHelper.show(TAG, "saveAppOpen" + packageName + ":" + appName);
+        LogHelper.show(TAG, "saveAppOpen " + packageName + ":" + appName);
+        if (TextUtils.isEmpty(packageName))
+            return;
         java.text.DateFormat format = new java.text.SimpleDateFormat(Common.FOMAT);
         final AppUseDBEntity ae = new AppUseDBEntity();
         ae.setAppName(appName);
@@ -134,6 +145,89 @@ public class DbHelper {
             public void onFailure(int i, String s) {
                 LogHelper.show(TAG, "saveAppUse online onFailure");
                 ae.save();
+            }
+        });
+    }
+
+    /**
+     * 将本地数据上传
+     */
+    public static void upload(){
+        uploadScreenData();
+        uploadAppData();
+    }
+    private static boolean isUploadScreenData = false;
+    private static void uploadScreenData(){
+        LogHelper.show(TAG, "uploadScreenData");
+        //有可能同时受到多个广播，会执行多次
+        if (isUploadScreenData){
+            LogHelper.show(TAG, "isUploading");
+            return;
+        }
+        isUploadScreenData = true;
+        final List<ScreenDBEntity> allNews = DataSupport.limit(50).find(ScreenDBEntity.class);
+        if (allNews==null||allNews.size()<1){
+            LogHelper.show(TAG,"no data to upload");
+            return;
+        }
+        List<BmobObject> locations = new ArrayList<BmobObject>();
+        for (ScreenDBEntity entity:allNews) {
+            ScreenOnlineDBEntity online = new ScreenOnlineDBEntity(entity);
+            locations.add(online);
+        }
+
+        new BmobObject().insertBatch(QsApplication.getContext(), locations, new SaveListener() {
+            @Override
+            public void onSuccess() {
+                LogHelper.show(TAG, "uploade onSuccess");
+                for (ScreenDBEntity entity : allNews) {
+                    entity.delete();
+                }
+                isUploadScreenData = false;
+            }
+
+            @Override
+            public void onFailure(int i, String s) {
+                LogHelper.show(TAG, "uploade onFailure:" + i + ":" + s);
+                isUploadScreenData = false;
+            }
+        });
+    }
+
+    private static boolean isUploadAppData = false;
+    private static void uploadAppData(){
+        LogHelper.show(TAG, "uploadAppData");
+        //有可能同时受到多个广播，会执行多次
+        if (isUploadAppData){
+            LogHelper.show(TAG, "isUploading");
+            return;
+        }
+        isUploadAppData = true;
+        final List<AppUseDBEntity> allNews = DataSupport.limit(50).find(AppUseDBEntity.class);
+        if (allNews==null||allNews.size()<1){
+            LogHelper.show(TAG,"no data to upload");
+            return;
+        }
+        List<BmobObject> locations = new ArrayList<BmobObject>();
+        for (AppUseDBEntity entity:allNews) {
+            AppUseOnlineDBEntity online = new AppUseOnlineDBEntity(entity);
+            locations.add(online);
+        }
+
+        new BmobObject().insertBatch(QsApplication.getContext(), locations, new SaveListener() {
+            @Override
+            public void onSuccess() {
+                LogHelper.show(TAG, "uploade onSuccess");
+                for (AppUseDBEntity entity : allNews) {
+                    entity.delete();
+                }
+                isUploadAppData = false;
+            }
+
+            @Override
+            public void onFailure(int i, String s) {
+                LogHelper.show(TAG, "uploade onFailure:" + i + ":" + s);
+                isUploadAppData = false;
             }
         });
     }

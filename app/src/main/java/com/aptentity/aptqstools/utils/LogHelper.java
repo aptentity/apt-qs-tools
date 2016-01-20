@@ -82,7 +82,7 @@ public class LogHelper {
     }
 
     public static void show(String TAG,String log){
-        Log.v(tag+TAG, log);
+        Log.e(tag+TAG, log);
         if(!debug){
             return;
         }

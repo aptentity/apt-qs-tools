@@ -11,13 +11,14 @@ public class Common {
     public static final String UUID="aptentity";
     public static final String FOMAT="yyyyMMddHHmmss";
     public static final String FOMAT2="yyyyMMdd";
+    private final String TAG = Common.class.getSimpleName();
 
     public static void startPhoneUseService(Context context){
-        LogHelper.v("Common --> startPhoneUseService");
+        LogHelper.show("Common --> startPhoneUseService");
         Intent i = new Intent("com.apt.PhoneUseService");
         i.setPackage(context.getPackageName());
         context.startService(i);
-        LogHelper.v("Common --> startPhoneUseService end");
+        LogHelper.show("Common --> startPhoneUseService end");
     }
 
     public static String getCurrentPkgName(Context context) {

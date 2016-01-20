@@ -4,8 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
-import android.util.Log;
 
+import com.aptentity.aptqstools.model.db.DbHelper;
 import com.aptentity.aptqstools.model.db.LocationDBHelper;
 import com.aptentity.aptqstools.model.utils.NetworkUtils;
 import com.aptentity.aptqstools.utils.LogHelper;
@@ -25,6 +25,7 @@ public class NetworkReceiver extends BroadcastReceiver{
             LogHelper.show(TAG,"net work changed");
             if (NetworkUtils.isWifiConnected(context)){
                 LocationDBHelper.upload();
+                DbHelper.upload();
             }
             return;
         }

@@ -15,7 +15,7 @@ import com.aptentity.aptqstools.utils.Common;
 
 
 public class PhoneUseService extends Service {
-
+    private final String TAG = PhoneUseService.class.getSimpleName();
     private ActivityManager am = null;
     private PackageManager pm;
     private boolean brun = false;
@@ -31,11 +31,11 @@ public class PhoneUseService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        LogHelper.show("PhoneUseService->onCreate");
+        LogHelper.show(TAG,"PhoneUseService->onCreate");
         am = (ActivityManager) this.getSystemService(Context.ACTIVITY_SERVICE);
         pm = this.getPackageManager();
         registerScreenReceiver();
-        LogHelper.show("PhoneUseService->onCreate end");
+        LogHelper.show(TAG,"PhoneUseService->onCreate end");
     }
     
     @Override
@@ -47,7 +47,7 @@ public class PhoneUseService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        LogHelper.show("PhoneUseService->onStartCommand");
+        LogHelper.show(TAG,"PhoneUseService->onStartCommand");
         if (!brun) {
             brun = true;
             Thread th_monitor = new Thread(new Runnable() {
@@ -60,17 +60,16 @@ public class PhoneUseService extends Service {
             });
             th_monitor.start();
         }
-        LogHelper.show("PhoneUseService->onStartCommand end");
+        LogHelper.show(TAG,"PhoneUseService->onStartCommand end");
         return super.onStartCommand(intent, flags, startId);
     }
 
     private void getAppUse() {
         String newTask = Common.getCurrentPkgName(getApplicationContext());
+        LogHelper.show(TAG,"newTask:"+newTask);
         if (oldTask==null){
             oldTask = newTask;
-            return;
-        }
-        if (!oldTask.equals(newTask)) {
+        }else if (!oldTask.equals(newTask)) {
             CharSequence c = "";
             CharSequence oldc = "";
             try {
