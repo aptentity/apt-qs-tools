@@ -21,6 +21,11 @@ public class Common {
         LogHelper.show("Common --> startPhoneUseService end");
     }
 
+    /**
+     * mx4 pro 5.6.1.19无法获取
+     * @param context
+     * @return
+     */
     public static String getCurrentPkgName(Context context) {
         if (getSDKVersionNumber()>20){
             ActivityManager.RunningAppProcessInfo currentInfo = null;
