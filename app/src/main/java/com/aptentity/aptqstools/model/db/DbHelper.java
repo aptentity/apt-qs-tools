@@ -80,12 +80,13 @@ public class DbHelper {
             @Override
             public void onSuccess() {
                 LogHelper.show(TAG, "saveScreen online onSuccess");
-                se.save();
+
             }
 
             @Override
             public void onFailure(int i, String s) {
                 LogHelper.show(TAG, "saveScreen online onFailure");
+                se.save();
             }
         });
     }
