@@ -55,12 +55,12 @@ public class LocationDBHelper {
             LogHelper.show(TAG, "isUploading");
             return;
         }
-        isUpload = true;
         final List<LocationDBEntity> allNews = DataSupport.limit(50).find(LocationDBEntity.class);
         if (allNews==null||allNews.size()<1){
             LogHelper.show(TAG,"no data to upload");
             return;
         }
+        isUpload = true;
         List<BmobObject> locations = new ArrayList<BmobObject>();
         for (LocationDBEntity entity:allNews) {
             LocationOnlineDBEntity online = new LocationOnlineDBEntity(entity);

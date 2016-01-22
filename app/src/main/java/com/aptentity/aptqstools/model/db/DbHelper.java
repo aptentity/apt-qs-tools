@@ -162,15 +162,16 @@ public class DbHelper {
         LogHelper.show(TAG, "uploadScreenData");
         //有可能同时受到多个广播，会执行多次
         if (isUploadScreenData){
-            LogHelper.show(TAG, "isUploading");
+            LogHelper.show(TAG, "ScreenData isUploading");
+            return;
+        }
+
+        final List<ScreenDBEntity> allNews = DataSupport.limit(50).find(ScreenDBEntity.class);
+        if (allNews==null||allNews.size()<1){
+            LogHelper.show(TAG,"ScreenData no data to upload");
             return;
         }
         isUploadScreenData = true;
-        final List<ScreenDBEntity> allNews = DataSupport.limit(50).find(ScreenDBEntity.class);
-        if (allNews==null||allNews.size()<1){
-            LogHelper.show(TAG,"no data to upload");
-            return;
-        }
         List<BmobObject> locations = new ArrayList<BmobObject>();
         for (ScreenDBEntity entity:allNews) {
             ScreenOnlineDBEntity online = new ScreenOnlineDBEntity(entity);
@@ -180,7 +181,7 @@ public class DbHelper {
         new BmobObject().insertBatch(QsApplication.getContext(), locations, new SaveListener() {
             @Override
             public void onSuccess() {
-                LogHelper.show(TAG, "uploade onSuccess");
+                LogHelper.show(TAG, "ScreenData uploade onSuccess");
                 for (ScreenDBEntity entity : allNews) {
                     entity.delete();
                 }
@@ -189,7 +190,7 @@ public class DbHelper {
 
             @Override
             public void onFailure(int i, String s) {
-                LogHelper.show(TAG, "uploade onFailure:" + i + ":" + s);
+                LogHelper.show(TAG, "ScreenData uploade onFailure:" + i + ":" + s);
                 isUploadScreenData = false;
             }
         });
@@ -200,15 +201,15 @@ public class DbHelper {
         LogHelper.show(TAG, "uploadAppData");
         //有可能同时受到多个广播，会执行多次
         if (isUploadAppData){
-            LogHelper.show(TAG, "isUploading");
+            LogHelper.show(TAG, "AppData isUploading");
+            return;
+        }
+        final List<AppUseDBEntity> allNews = DataSupport.limit(50).find(AppUseDBEntity.class);
+        if (allNews==null||allNews.size()<1){
+            LogHelper.show(TAG,"AppData no data to upload");
             return;
         }
         isUploadAppData = true;
-        final List<AppUseDBEntity> allNews = DataSupport.limit(50).find(AppUseDBEntity.class);
-        if (allNews==null||allNews.size()<1){
-            LogHelper.show(TAG,"no data to upload");
-            return;
-        }
         List<BmobObject> locations = new ArrayList<BmobObject>();
         for (AppUseDBEntity entity:allNews) {
             AppUseOnlineDBEntity online = new AppUseOnlineDBEntity(entity);
@@ -218,7 +219,7 @@ public class DbHelper {
         new BmobObject().insertBatch(QsApplication.getContext(), locations, new SaveListener() {
             @Override
             public void onSuccess() {
-                LogHelper.show(TAG, "uploade onSuccess");
+                LogHelper.show(TAG, "AppData uploade onSuccess");
                 for (AppUseDBEntity entity : allNews) {
                     entity.delete();
                 }
@@ -227,7 +228,7 @@ public class DbHelper {
 
             @Override
             public void onFailure(int i, String s) {
-                LogHelper.show(TAG, "uploade onFailure:" + i + ":" + s);
+                LogHelper.show(TAG, "AppData uploade onFailure:" + i + ":" + s);
                 isUploadAppData = false;
             }
         });
