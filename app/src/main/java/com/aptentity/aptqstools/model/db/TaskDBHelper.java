@@ -5,6 +5,7 @@ import android.content.Context;
 import com.aptentity.aptqstools.application.QsApplication;
 import com.aptentity.aptqstools.model.callback.GetCurrentExecuteTaskCallback;
 import com.aptentity.aptqstools.model.callback.ResultCallback;
+import com.aptentity.aptqstools.model.dao.ProjectEntity;
 import com.aptentity.aptqstools.model.dao.TaskDescribe;
 import com.aptentity.aptqstools.model.dao.TaskExecuteRecord;
 import com.aptentity.aptqstools.model.utils.TimeUtils;
@@ -282,6 +283,7 @@ public class TaskDBHelper {
      * 完成一条任务执行记录
      */
     private static void completeExecuteTask(){
+        LogHelper.show(TAG, "completeExecuteTask");
         getCurrentExecuteTask(new GetCurrentExecuteTaskCallback() {
             @Override
             public void onResult(TaskExecuteRecord task) {
@@ -293,7 +295,7 @@ public class TaskDBHelper {
                 LogHelper.show(TAG, "completTask update TaskExecuteRecord");
                 long time = System.currentTimeMillis();
                 task.setTimeStop(time);
-                task.setTimeUsed(task.getTimeStop()-task.getTimeStart());
+                task.setTimeUsed(task.getTimeStop() - task.getTimeStart());
                 task.update(mContext, new UpdateListener() {
                     @Override
                     public void onSuccess() {
@@ -327,5 +329,103 @@ public class TaskDBHelper {
         int urgentScore = urgentIndex*urgent/9;
         int score = importantScore+urgentScore;
         return score;
+    }
+
+    /**
+     * 创建项目
+     */
+    public static void createProject(ProjectEntity entity,final ResultCallback callback){
+        LogHelper.show(TAG,"createProject");
+        entity.setStatus(TaskDescribe.STATUS_NORMAL);
+        entity.save(mContext, new SaveListener() {
+            @Override
+            public void onSuccess() {
+                callback.onSuccess();
+            }
+
+            @Override
+            public void onFailure(int i, String s) {
+                callback.onFailed(i,s);
+            }
+        });
+    }
+
+    /**
+     * 删除项目
+     * @param entity
+     * @param callback
+     */
+    public static void deleteProject(ProjectEntity entity,final ResultCallback callback){
+        LogHelper.show(TAG, "deleteProject");
+        entity.delete(mContext, new DeleteListener() {
+            @Override
+            public void onSuccess() {
+                callback.onSuccess();
+            }
+
+            @Override
+            public void onFailure(int i, String s) {
+                callback.onFailed(i, s);
+            }
+        });
+    }
+
+    /**
+     * 更新项目
+     * @param entity
+     * @param callback
+     */
+    public static void updateProject(ProjectEntity entity,final ResultCallback callback){
+        LogHelper.show(TAG,"updateProject");
+        entity.update(mContext, new UpdateListener() {
+            @Override
+            public void onSuccess() {
+                callback.onSuccess();
+            }
+
+            @Override
+            public void onFailure(int i, String s) {
+                callback.onFailed(i, s);
+            }
+        });
+    }
+
+    /**
+     * 完成项目
+     * @param entity
+     * @param callback
+     */
+    public static void completeProject(ProjectEntity entity, final ResultCallback callback){
+        entity.setStatus(TaskDescribe.STATUS_COMPLETE);
+        entity.save(mContext, new SaveListener() {
+            @Override
+            public void onSuccess() {
+                callback.onSuccess();
+            }
+
+            @Override
+            public void onFailure(int i, String s) {
+                callback.onFailed(i,s);
+            }
+        });
+    }
+    /**
+     * 获取项目
+     * @param taskId
+     * @param callback
+     */
+    public static void getProject(String taskId,GetListener<ProjectEntity> callback){
+        LogHelper.show(TAG,"getProject");
+        BmobQuery<ProjectEntity> query = new BmobQuery<ProjectEntity>();
+        query.getObject(mContext, taskId, callback);
+    }
+
+    /**
+     * 获取所有项目
+     */
+    public static void getProjects(FindListener<ProjectEntity> callback){
+        LogHelper.show(TAG,"getProjects");
+        BmobQuery<ProjectEntity> query = new BmobQuery<ProjectEntity>();
+        query.findObjects(mContext,callback);
     }
 }

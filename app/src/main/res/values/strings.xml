@@ -101,6 +101,7 @@
         <item>Normal</item>
         <item>All</item>
         <item>Complete</item>
+        <item>Projects</item>
     </string-array>
     <string name="equipment_settings_logout_dialog_cancel">取消</string>
     <string name="high">高</string>
@@ -108,4 +109,7 @@
     <string name="low">低</string>
     <string name="save_success">保存成功</string>
     <string name="save_fail">保存失败</string>
+    <string name="get_project_success">获取项目列表成功</string>
+    <string name="get_project_failed">获取项目列表失败</string>
+    <string name="title_activity_project">ProjectActivity</string>
 </resources>

@@ -8,7 +8,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.aptentity.aptqstools.R;
+import com.aptentity.aptqstools.model.dao.ProjectEntity;
 import com.aptentity.aptqstools.model.dao.TaskDescribe;
+import com.aptentity.aptqstools.model.db.TaskDBHelper;
 import com.aptentity.aptqstools.model.utils.ActivitiesUtils;
 import com.aptentity.aptqstools.presenter.TaskListPresenter;
 import com.aptentity.aptqstools.utils.LogHelper;
@@ -62,9 +64,14 @@ public class TaskListActivity extends BasicActivity {
     private AdapterView.OnItemClickListener l = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-            LogHelper.show(TAG,"listview onItemClick");
-            TaskDescribe entity = mListTask.get(i);
-            ActivitiesUtils.startViewTaskActivity(TaskListActivity.this,entity);
+            LogHelper.show(TAG, "listview onItemClick");
+            if (mAdapter.getType() == 1){
+                ProjectEntity entity = (ProjectEntity)mAdapter.getItem(i);
+                ActivitiesUtils.startViewProjectActivity(TaskListActivity.this,entity);
+            }else {
+                TaskDescribe entity = mListTask.get(i);
+                ActivitiesUtils.startViewTaskActivity(TaskListActivity.this,entity);
+            }
         }
     };
 
@@ -92,6 +99,9 @@ public class TaskListActivity extends BasicActivity {
                 break;
             case 2:
                 getCompletedTasks();
+                break;
+            case 3:
+                getProjectList();
                 break;
         }
     }
@@ -122,6 +132,9 @@ public class TaskListActivity extends BasicActivity {
                 break;
             case R.id.borg_action_task_list_show:
                 ActivitiesUtils.startFunctionActivity(TaskListActivity.this);
+                break;
+            case R.id.borg_action_project_list_add:
+                ActivitiesUtils.startAddProjectActivity(TaskListActivity.this);
                 break;
             default:
                 break;
@@ -180,6 +193,7 @@ public class TaskListActivity extends BasicActivity {
             }
         });
     }
+    TaskItemAdapter mAdapter;
 
     /**
      * 更新任务列表
@@ -190,9 +204,38 @@ public class TaskListActivity extends BasicActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                TaskItemAdapter adapter = new TaskItemAdapter(TaskListActivity.this);
-                adapter.setData(list);
-                taskList.setAdapter(adapter);
+                mAdapter = new TaskItemAdapter(TaskListActivity.this);
+                mAdapter.setData(list);
+                taskList.setAdapter(mAdapter);
+            }
+        });
+    }
+
+    private void updateProjectList(final List<ProjectEntity> list){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mAdapter = new TaskItemAdapter(TaskListActivity.this);
+                mAdapter.setPrjectData(list);
+                taskList.setAdapter(mAdapter);
+            }
+        });
+    }
+
+    /**
+     *
+     */
+    private void getProjectList(){
+        LogHelper.show(TAG,"updateProjectList");
+        TaskDBHelper.getProjects(new FindListener<ProjectEntity>() {
+            @Override
+            public void onSuccess(List<ProjectEntity> list) {
+                updateProjectList(list);
+            }
+
+            @Override
+            public void onError(int i, String s) {
+
             }
         });
     }
