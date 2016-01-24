@@ -75,6 +75,7 @@ public class LocationDBHelper {
                     entity.delete();
                 }
                 isUpload = false;
+                upload();
             }
 
             @Override

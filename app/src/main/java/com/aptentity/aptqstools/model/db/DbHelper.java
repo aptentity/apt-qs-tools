@@ -186,6 +186,7 @@ public class DbHelper {
                     entity.delete();
                 }
                 isUploadScreenData = false;
+                uploadScreenData();
             }
 
             @Override
@@ -224,6 +225,7 @@ public class DbHelper {
                     entity.delete();
                 }
                 isUploadAppData = false;
+                uploadAppData();
             }
 
             @Override
