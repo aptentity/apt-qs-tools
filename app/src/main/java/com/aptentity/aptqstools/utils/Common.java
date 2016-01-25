@@ -1,11 +1,15 @@
 package com.aptentity.aptqstools.utils;
 
 import android.app.ActivityManager;
+import android.app.usage.UsageStats;
+import android.app.usage.UsageStatsManager;
 import android.content.Context;
 import android.content.Intent;
 
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 public class Common {
     public static final String UUID="aptentity";
@@ -27,6 +31,21 @@ public class Common {
      * @return
      */
     public static String getCurrentPkgName(Context context) {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            UsageStatsManager usm = (UsageStatsManager) context.getSystemService(Context.USAGE_STATS_SERVICE);
+            long time = System.currentTimeMillis();
+            List<UsageStats> appList = usm.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, time - 1000 * 1000, time);
+            if (appList != null && appList.size() > 0) {
+                SortedMap<Long, UsageStats> mySortedMap = new TreeMap<Long, UsageStats>();
+                for (UsageStats usageStats : appList) {
+                    mySortedMap.put(usageStats.getLastTimeUsed(), usageStats);
+                }
+                if (mySortedMap != null && !mySortedMap.isEmpty()) {
+                    String pkgName = mySortedMap.get(mySortedMap.lastKey()).getPackageName();
+                    return pkgName;
+                }
+            }
+        }
         if (getSDKVersionNumber()>20){
             ActivityManager.RunningAppProcessInfo currentInfo = null;
             Field field = null;

@@ -12,6 +12,7 @@ import com.aptentity.aptqstools.model.dao.ProjectEntity;
 import com.aptentity.aptqstools.model.dao.TaskDescribe;
 import com.aptentity.aptqstools.model.db.TaskDBHelper;
 import com.aptentity.aptqstools.model.utils.ActivitiesUtils;
+import com.aptentity.aptqstools.model.utils.CommonUtils;
 import com.aptentity.aptqstools.presenter.TaskListPresenter;
 import com.aptentity.aptqstools.utils.LogHelper;
 import com.aptentity.aptqstools.view.adapter.TaskItemAdapter;
@@ -55,6 +56,8 @@ public class TaskListActivity extends BasicActivity {
                 R.layout.drawer_list_item, mTitles));
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
         mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+
+        CommonUtils.startUsageStats(this);
     }
 
     /**
