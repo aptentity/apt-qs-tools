@@ -51,8 +51,13 @@ public class QsApplication extends LitePalApplication{
         mMainThreadHandler = new Handler();
 
         //获取IMEI
-        TelephonyManager tm = (TelephonyManager) this.getSystemService(TELEPHONY_SERVICE);
-        Env.PhoneID = tm.getDeviceId();
+        try{
+            TelephonyManager tm = (TelephonyManager) this.getSystemService(TELEPHONY_SERVICE);
+            Env.PhoneID = tm.getDeviceId();
+        }catch (Exception e){
+            LogHelper.show(e.getMessage());
+        }
+
     }
     private static Handler mMainThreadHandler = null;
     public static Handler getMainThreadHandler() {
