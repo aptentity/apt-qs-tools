@@ -263,6 +263,7 @@ public class TaskActivity extends BasicActivity implements ITaskActivity{
         intent.putExtra("timeThisTime",mEntity.getTimeThisTime());
         intent.putExtra("title",mEntity.getTitle());
         intent.putExtra("id",mEntity.getObjectId());
+        intent.putExtra("notification",true);
         startService(intent);
     }
 

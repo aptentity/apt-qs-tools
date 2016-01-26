@@ -74,17 +74,20 @@ public class PhoneUseService extends Service {
         LogHelper.show(TAG, "PhoneUseService->onStartCommand end");
 
         boolean shown = intent.getBooleanExtra("showNotification",false);
-        timeUsed = intent.getLongExtra("timeUsed",0);
-        timeThisTime = intent.getLongExtra("timeThisTime",0);
-        title = intent.getStringExtra("title");
-        id = intent.getStringExtra("id");
-        showNotification(shown);
+        boolean flag = intent.getBooleanExtra("notification",false);
+        if (flag){
+            timeUsed = intent.getLongExtra("timeUsed", 0);
+            timeThisTime = intent.getLongExtra("timeThisTime", 0);
+            title = intent.getStringExtra("title");
+            id = intent.getStringExtra("id");
+            showNotification(shown);
+        }
         return super.onStartCommand(intent, flags, startId);
     }
 
     private void getAppUse() {
         String newTask = Common.getCurrentPkgName(getApplicationContext());
-        LogHelper.show(TAG,"newTask:"+newTask);
+        //LogHelper.show(TAG,"newTask:"+newTask);
         if (oldTask==null){
             oldTask = newTask;
         }else if (!oldTask.equals(newTask)) {
@@ -159,7 +162,7 @@ public class PhoneUseService extends Service {
                 .setTicker(title)
                 .setContentTitle(title)
                 .setContentText(text)
-                .setContentIntent(pendingIntent).setNumber(1).build(); // 需要注意build()是在API
+                .setContentIntent(pendingIntent).setNumber(1).setVisibility(Notification.VISIBILITY_PRIVATE).build(); // 需要注意build()是在API
         // level16及之后增加的，API11可以使用getNotificatin()来替代
         notify.flags |= Notification.FLAG_NO_CLEAR; // FLAG_AUTO_CANCEL表明当通知被用户点击时，通知将被清除。
         manager.notify(NOTIFICATION_FLAG, notify);// 步骤4：通过通知管理器来发起通知。如果id不同，则每click，在status哪里增加一个提
@@ -182,6 +185,7 @@ public class PhoneUseService extends Service {
     };
 
     private void clearNotification(){
+        LogHelper.show(TAG,"clearNotification");
         NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         manager.cancel(NOTIFICATION_FLAG);
     }
