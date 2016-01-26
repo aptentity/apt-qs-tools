@@ -1,30 +1,25 @@
 package com.aptentity.aptqstools.view;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
 import com.aptentity.aptqstools.R;
-import com.aptentity.aptqstools.activity.MainActivity;
 import com.aptentity.aptqstools.model.callback.ResultCallback;
 import com.aptentity.aptqstools.model.dao.TaskDescribe;
 import com.aptentity.aptqstools.model.utils.TimeUtils;
 import com.aptentity.aptqstools.model.utils.ToastUtils;
 import com.aptentity.aptqstools.model.utils.UrgentUtils;
 import com.aptentity.aptqstools.presenter.TaskPresenter;
+import com.aptentity.aptqstools.service.PhoneUseService;
 import com.aptentity.aptqstools.utils.LogHelper;
 import com.aptentity.aptqstools.view.api.ITaskActivity;
 import com.aptentity.aptqstools.view.widget.UrgentSelectDlg;
 
 import cn.bmob.v3.listener.GetListener;
-import cn.bmob.v3.listener.SaveListener;
 
 public class TaskActivity extends BasicActivity implements ITaskActivity{
     public final String TAG = TaskActivity.class.getSimpleName();
@@ -32,7 +27,7 @@ public class TaskActivity extends BasicActivity implements ITaskActivity{
     public final static int MODE_VIEW=1;
     private int mode=0;//模式，0添加任务模式，1为查看任务模式
     private TaskPresenter presenter;
-    private TaskDescribe mEntity=new TaskDescribe();;
+    private TaskDescribe mEntity=new TaskDescribe();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -243,16 +238,14 @@ public class TaskActivity extends BasicActivity implements ITaskActivity{
         findViewById(R.id.borg_btn_task_complete).setVisibility(View.VISIBLE);
         findViewById(R.id.borg_btn_task_pause).setVisibility(View.VISIBLE);
         findViewById(R.id.borg_btn_task_resume).setVisibility(View.GONE);
-        showNotification();
-        handler.postDelayed(runnable, 1000);
+        showNotification(true);
     }
     private void pauseUI(){
         findViewById(R.id.borg_btn_task_start).setVisibility(View.GONE);
         findViewById(R.id.borg_btn_task_complete).setVisibility(View.VISIBLE);
         findViewById(R.id.borg_btn_task_pause).setVisibility(View.GONE);
         findViewById(R.id.borg_btn_task_resume).setVisibility(View.VISIBLE);
-        handler.removeCallbacks(runnable);
-        clearNotification();
+        showNotification(false);
     }
 
     private void completeUI(){
@@ -260,66 +253,17 @@ public class TaskActivity extends BasicActivity implements ITaskActivity{
         findViewById(R.id.borg_btn_task_complete).setVisibility(View.GONE);
         findViewById(R.id.borg_btn_task_pause).setVisibility(View.GONE);
         findViewById(R.id.borg_btn_task_resume).setVisibility(View.GONE);
-        handler.removeCallbacks(runnable);
-        clearNotification();
+        showNotification(false);
     }
 
-    private final int NOTIFICATION_FLAG = 1;
-    private void showNotification(){
-        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, MainActivity.class), 0);
-        // 通过Notification.Builder来创建通知，注意API Level
-        // API16之后才支持
-        Notification notify = new Notification.Builder(this)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setTicker(mEntity.getTitle())
-                .setContentTitle(mEntity.getTitle())
-                .setContentText("This is the notification message")
-                .setContentIntent(pendingIntent).setNumber(1).build(); // 需要注意build()是在API
-        // level16及之后增加的，API11可以使用getNotificatin()来替代
-        notify.flags |= Notification.FLAG_NO_CLEAR; // FLAG_AUTO_CANCEL表明当通知被用户点击时，通知将被清除。
-        manager.notify(NOTIFICATION_FLAG, notify);// 步骤4：通过通知管理器来发起通知。如果id不同，则每click，在status哪里增加一个提
-    }
-
-    private void updateNotification(String text){
-        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, MainActivity.class), 0);
-        // 通过Notification.Builder来创建通知，注意API Level
-        // API16之后才支持
-        Notification notify = new Notification.Builder(this)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setTicker(mEntity.getTitle())
-                .setContentTitle(mEntity.getTitle())
-                .setContentText(text)
-                .setContentIntent(pendingIntent).setNumber(1).build(); // 需要注意build()是在API
-        // level16及之后增加的，API11可以使用getNotificatin()来替代
-        notify.flags |= Notification.FLAG_NO_CLEAR; // FLAG_AUTO_CANCEL表明当通知被用户点击时，通知将被清除。
-        manager.notify(NOTIFICATION_FLAG, notify);// 步骤4：通过通知管理器来发起通知。如果id不同，则每click，在status哪里增加一个提
-        //PendingIntent.FLAG_UPDATE_CURRENT
-    }
-
-    /**
-     * 定时器
-     */
-    Handler handler=new Handler();
-    Runnable runnable=new Runnable() {
-        @Override
-        public void run() {
-            // TODO Auto-generated method stub
-            //要做的事情
-            handler.postDelayed(this, 1000);
-            long time = System.currentTimeMillis();
-            updateNotification("running:"+TimeUtils.formatLongToTimeStr(mEntity.getTimeUsed()+(time-mEntity.getTimeThisTime())));
-        }
-    };
-
-    private void clearNotification(){
-        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        manager.cancel(NOTIFICATION_FLAG);
+    private void showNotification(boolean shown){
+        Intent intent = new Intent(this, PhoneUseService.class);
+        intent.putExtra("showNotification",shown);
+        intent.putExtra("timeUsed",mEntity.getTimeUsed());
+        intent.putExtra("timeThisTime",mEntity.getTimeThisTime());
+        intent.putExtra("title",mEntity.getTitle());
+        intent.putExtra("id",mEntity.getObjectId());
+        startService(intent);
     }
 
     @Override
