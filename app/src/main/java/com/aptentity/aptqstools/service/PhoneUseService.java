@@ -73,15 +73,18 @@ public class PhoneUseService extends Service {
         }
         LogHelper.show(TAG, "PhoneUseService->onStartCommand end");
 
-        boolean shown = intent.getBooleanExtra("showNotification",false);
-        boolean flag = intent.getBooleanExtra("notification",false);
-        if (flag){
-            timeUsed = intent.getLongExtra("timeUsed", 0);
-            timeThisTime = intent.getLongExtra("timeThisTime", 0);
-            title = intent.getStringExtra("title");
-            id = intent.getStringExtra("id");
-            showNotification(shown);
+        if (intent!=null){
+            boolean shown = intent.getBooleanExtra("showNotification",false);
+            boolean flag = intent.getBooleanExtra("notification",false);
+            if (flag){
+                timeUsed = intent.getLongExtra("timeUsed", 0);
+                timeThisTime = intent.getLongExtra("timeThisTime", 0);
+                title = intent.getStringExtra("title");
+                id = intent.getStringExtra("id");
+                showNotification(shown);
+            }
         }
+
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -164,7 +167,7 @@ public class PhoneUseService extends Service {
                 .setContentText(text)
                 .setContentIntent(pendingIntent).setNumber(1).setVisibility(Notification.VISIBILITY_PRIVATE).build(); // 需要注意build()是在API
         // level16及之后增加的，API11可以使用getNotificatin()来替代
-        notify.flags |= Notification.FLAG_NO_CLEAR; // FLAG_AUTO_CANCEL表明当通知被用户点击时，通知将被清除。
+        //notify.flags |= Notification.FLAG_NO_CLEAR; // FLAG_AUTO_CANCEL表明当通知被用户点击时，通知将被清除。
         manager.notify(NOTIFICATION_FLAG, notify);// 步骤4：通过通知管理器来发起通知。如果id不同，则每click，在status哪里增加一个提
         //PendingIntent.FLAG_UPDATE_CURRENT
     }
@@ -180,7 +183,7 @@ public class PhoneUseService extends Service {
             //要做的事情
             handler.postDelayed(this, 1000);
             long time = System.currentTimeMillis();
-            updateNotification("running:"+ TimeUtils.formatLongToTimeStr(timeUsed + (time - timeThisTime)));
+            updateNotification("running:"+ TimeUtils.formatLongToTimeStr(timeUsed + (time - timeThisTime))+"\nThis time:"+TimeUtils.formatLongToTimeStr(time - timeThisTime));
         }
     };
 
