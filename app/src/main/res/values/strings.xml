@@ -98,10 +98,10 @@
         "when a user tries to pick up one of cards.\n\n"
     </string>
     <string-array name="time_array">
-        <item>Normal</item>
-        <item>All</item>
-        <item>Complete</item>
-        <item>Projects</item>
+        <item>@string/title_normal</item>
+        <item>@string/title_all</item>
+        <item>@string/title_complete</item>
+        <item>@string/title_projects</item>
     </string-array>
     <string name="equipment_settings_logout_dialog_cancel">取消</string>
     <string name="high">高</string>
@@ -112,4 +112,8 @@
     <string name="get_project_success">获取项目列表成功</string>
     <string name="get_project_failed">获取项目列表失败</string>
     <string name="title_activity_project">ProjectActivity</string>
+    <string name="title_normal">Normal</string>
+    <string name="title_all">All</string>
+    <string name="title_complete">Complete</string>
+    <string name="title_projects">Projects</string>
 </resources>

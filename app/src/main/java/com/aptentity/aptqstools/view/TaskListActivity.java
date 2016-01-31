@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.aptentity.aptqstools.R;
 import com.aptentity.aptqstools.model.dao.ProjectEntity;
@@ -33,6 +34,7 @@ public class TaskListActivity extends BasicActivity {
     private String[] mTitles;
     private DrawerLayout mDrawerLayout;
     private int mDataType=0;
+    private String mTitle="";
 
     @Override
     int getViewID() {
@@ -56,7 +58,7 @@ public class TaskListActivity extends BasicActivity {
                 R.layout.drawer_list_item, mTitles));
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
         mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
-
+        mTitle = mTitles[0];
         CommonUtils.startUsageStats(this);
     }
 
@@ -86,6 +88,8 @@ public class TaskListActivity extends BasicActivity {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             mDataType = position;
+
+            mTitle = ((TextView)view.findViewById(android.R.id.text1)).getText().toString();
             getData();
             LogHelper.show(TAG,"onItemClick:"+position);
             mDrawerLayout.closeDrawers();
@@ -93,19 +97,18 @@ public class TaskListActivity extends BasicActivity {
     }
 
     private void getData(){
-        switch (mDataType){
-            case 0:
-                getNormalTasks();
-                break;
-            case 1:
-                getAllTasks();
-                break;
-            case 2:
-                getCompletedTasks();
-                break;
-            case 3:
-                getProjectList();
-                break;
+        final String normal = getString(R.string.title_normal);
+        final String all = getString(R.string.title_all);
+        final String complete = getString(R.string.title_complete);
+        final String project = getString(R.string.title_projects);
+        if (normal.equals(mTitle)){
+            getNormalTasks();
+        }else if(all.equals(mTitle)){
+            getAllTasks();
+        }else if (complete.equals(mTitle)){
+            getCompletedTasks();
+        }else if (project.equals(mTitle)){
+            getProjectList();
         }
     }
 
