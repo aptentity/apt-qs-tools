@@ -28,12 +28,14 @@ public class TaskActivity extends BasicActivity implements ITaskActivity{
     private int mode=0;//模式，0添加任务模式，1为查看任务模式
     private TaskPresenter presenter;
     private TaskDescribe mEntity=new TaskDescribe();
-
+    private String taskId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         LogHelper.show(TAG, "onCreate");
         mode = getIntent().getExtras().getInt("mode");
         LogHelper.show(TAG,"mode="+mode);
+        taskId = getIntent().getExtras().getString("task_id");
+        LogHelper.show(TAG,"task_id="+taskId);
         presenter = new TaskPresenter(this);
         super.onCreate(savedInstanceState);
     }
@@ -86,7 +88,8 @@ public class TaskActivity extends BasicActivity implements ITaskActivity{
             findViewById(R.id.borg_btn_task_pause).setVisibility(View.GONE);
             findViewById(R.id.borg_btn_task_resume).setVisibility(View.GONE);
         }else if (MODE_VIEW==mode){
-            String taskId = getIntent().getExtras().getString("task_id");
+
+            LogHelper.show(TAG, "task_id:"+taskId);
             presenter.getTask(taskId, new GetListener<TaskDescribe>() {
                 @Override
                 public void onSuccess(TaskDescribe entity) {

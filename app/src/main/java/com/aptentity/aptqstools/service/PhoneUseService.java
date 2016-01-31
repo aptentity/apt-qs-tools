@@ -157,7 +157,7 @@ public class PhoneUseService extends Service {
         Intent intent = new Intent(this, TaskActivity.class);
         intent.putExtra("mode",TaskActivity.MODE_VIEW);
         intent.putExtra("task_id", id);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         // 通过Notification.Builder来创建通知，注意API Level
         // API16之后才支持
         Notification notify = new Notification.Builder(this)
@@ -165,7 +165,7 @@ public class PhoneUseService extends Service {
                 .setTicker(title)
                 .setContentTitle(title)
                 .setContentText(text)
-                .setContentIntent(pendingIntent).setNumber(1).setVisibility(Notification.VISIBILITY_PRIVATE).build(); // 需要注意build()是在API
+                .setContentIntent(pendingIntent).setNumber(1).build(); // 需要注意build()是在API
         // level16及之后增加的，API11可以使用getNotificatin()来替代
         //notify.flags |= Notification.FLAG_NO_CLEAR; // FLAG_AUTO_CANCEL表明当通知被用户点击时，通知将被清除。
         manager.notify(NOTIFICATION_FLAG, notify);// 步骤4：通过通知管理器来发起通知。如果id不同，则每click，在status哪里增加一个提
