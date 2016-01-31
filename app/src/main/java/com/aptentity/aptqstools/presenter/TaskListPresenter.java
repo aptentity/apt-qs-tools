@@ -62,9 +62,7 @@ public class TaskListPresenter {
      */
     public void getNormalTasks(final FindListener<TaskDescribe> findListener){
         BmobQuery<TaskDescribe> query = new BmobQuery<TaskDescribe>();
-        //query.setCachePolicy(BmobQuery.CachePolicy.CACHE_ELSE_NETWORK);
-        int[] names = {TaskDescribe.STATUS_NORMAL, TaskDescribe.STATUS_RUNNING};
-        query.addWhereLessThanOrEqualTo("status", TaskDescribe.STATUS_RUNNING);
+        query.addWhereLessThanOrEqualTo("status", TaskDescribe.STATUS_PAUSE);
         query.findObjects(QsApplication.getInstance(), new FindListener<TaskDescribe>() {
             @Override
             public void onSuccess(List<TaskDescribe> list) {
