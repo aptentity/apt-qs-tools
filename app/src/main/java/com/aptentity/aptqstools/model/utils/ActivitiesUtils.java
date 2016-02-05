@@ -7,6 +7,7 @@ import com.aptentity.aptqstools.activity.MainActivity;
 import com.aptentity.aptqstools.model.dao.ProjectEntity;
 import com.aptentity.aptqstools.model.dao.TaskDescribe;
 import com.aptentity.aptqstools.utils.LogHelper;
+import com.aptentity.aptqstools.view.PhotoRecordActivity;
 import com.aptentity.aptqstools.view.ProjectActivity;
 import com.aptentity.aptqstools.view.SoundRecordActivity;
 import com.aptentity.aptqstools.view.TaskActivity;
@@ -57,8 +58,14 @@ public class ActivitiesUtils {
     }
 
     public static void startSoundRecordActivity(Context context){
-        LogHelper.show(TAG,"startSoundRecordActivity");
+        LogHelper.show(TAG, "startSoundRecordActivity");
         Intent intent = new Intent(context, SoundRecordActivity.class);
+        context.startActivity(intent);
+    }
+
+    public static void startPhotoRecordActivity(Context context){
+        LogHelper.show(TAG,"startSoundRecordActivity");
+        Intent intent = new Intent(context, PhotoRecordActivity.class);
         context.startActivity(intent);
     }
 }

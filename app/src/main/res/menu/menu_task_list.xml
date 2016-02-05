@@ -13,6 +13,10 @@
         android:title="语音记录"
         android:orderInCategory="100"
         app:showAsAction="always" />
+    <item android:id="@+id/borg_action_project_list_photo_record"
+        android:title="图片记录"
+        android:orderInCategory="100"
+        app:showAsAction="always" />
     <item android:id="@+id/borg_action_task_list_show"
         android:title="menu"
         android:orderInCategory="100"

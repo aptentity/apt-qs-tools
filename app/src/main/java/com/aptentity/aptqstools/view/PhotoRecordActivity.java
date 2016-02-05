@@ -1,10 +1,10 @@
 package com.aptentity.aptqstools.view;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.aptentity.aptqstools.R;
@@ -16,7 +16,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 
-public class PhotoRecordActivity extends AppCompatActivity implements View.OnClickListener{
+public class PhotoRecordActivity extends Activity implements View.OnClickListener{
     // 文件保存地址
     private String path;
     @Override
@@ -46,6 +46,7 @@ public class PhotoRecordActivity extends AppCompatActivity implements View.OnCli
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.take_photo:
+                takePhoto();
                 break;
         }
     }
