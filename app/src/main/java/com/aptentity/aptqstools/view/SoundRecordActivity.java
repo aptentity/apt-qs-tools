@@ -35,9 +35,9 @@ import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
 
-public class SoundRecorderActivity extends Activity implements View.OnClickListener{
+public class SoundRecordActivity extends Activity implements View.OnClickListener{
 
-    final String TAG = SoundRecorderActivity.class.getSimpleName();
+    final String TAG = SoundRecordActivity.class.getSimpleName();
     Button start,stop;
     ShowRecorderAdpter showRecord;
     @Override
@@ -267,7 +267,7 @@ public class SoundRecorderActivity extends Activity implements View.OnClickListe
         @Override
         public View getView(final int postion, View arg1, ViewGroup arg2) {
 
-            View views = LayoutInflater.from(SoundRecorderActivity.this).inflate(
+            View views = LayoutInflater.from(SoundRecordActivity.this).inflate(
                     R.layout.list_show_filerecorder, null);
             TextView filename = (TextView) views
                     .findViewById(R.id.show_file_name);

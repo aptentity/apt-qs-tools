@@ -123,4 +123,6 @@
     <string name="play">播放</string>
     <string name="download">下载</string>
     <string name ="list_stop">停止</string>
+    <string name="title_activity_photo_record">PhotoRecordActivity</string>
+    <string name="take_photo">拍照</string>
 </resources>
