@@ -142,6 +142,9 @@ public class TaskListActivity extends BasicActivity {
             case R.id.borg_action_project_list_add:
                 ActivitiesUtils.startAddProjectActivity(TaskListActivity.this);
                 break;
+            case R.id.borg_action_project_list_sound_record:
+                ActivitiesUtils.startSoundRecordActivity(TaskListActivity.this);
+                break;
             default:
                 break;
         }

@@ -116,4 +116,11 @@
     <string name="title_all">All</string>
     <string name="title_complete">Complete</string>
     <string name="title_projects">Projects</string>
+    <string name="title_activity_sound_recorder">SoundRecorderActivity</string>
+
+    <string name="start">录音</string>
+    <string name="stop">停止/保存</string>
+    <string name="play">播放</string>
+    <string name="download">下载</string>
+    <string name ="list_stop">停止</string>
 </resources>

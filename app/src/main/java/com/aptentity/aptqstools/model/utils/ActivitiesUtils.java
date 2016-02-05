@@ -8,6 +8,7 @@ import com.aptentity.aptqstools.model.dao.ProjectEntity;
 import com.aptentity.aptqstools.model.dao.TaskDescribe;
 import com.aptentity.aptqstools.utils.LogHelper;
 import com.aptentity.aptqstools.view.ProjectActivity;
+import com.aptentity.aptqstools.view.SoundRecorderActivity;
 import com.aptentity.aptqstools.view.TaskActivity;
 
 /**
@@ -52,6 +53,12 @@ public class ActivitiesUtils {
         Intent intent = new Intent(context, ProjectActivity.class);
         intent.putExtra("mode",TaskActivity.MODE_VIEW);
         intent.putExtra("task_id", id);
+        context.startActivity(intent);
+    }
+
+    public static void startSoundRecordActivity(Context context){
+        LogHelper.show(TAG,"startSoundRecordActivity");
+        Intent intent = new Intent(context, SoundRecorderActivity.class);
         context.startActivity(intent);
     }
 }
