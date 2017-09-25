@@ -27,6 +27,9 @@ android {
             storeFile file("debug.keystore");
         }
     }
+    lintOptions {
+        abortOnError false
+    }
 }
 
 dependencies {
